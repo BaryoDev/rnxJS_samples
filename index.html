@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rnxJS Samples - Interactive Demos</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Custom Styles -->
+    <link href="styles.css" rel="stylesheet">
+
+    <style>
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4rem 0;
+            border-radius: 24px;
+            margin-bottom: 3rem;
+        }
+
+        .demo-card {
+            height: 100%;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .demo-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .demo-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-primary);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .code-block {
+            background: #1f2937;
+            color: #e5e7eb;
+            padding: 1.5rem;
+            border-radius: 12px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+        }
+
+        .badge-custom {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <Container class="py-4">
+        <!-- Hero Section -->
+        <div class="hero glass text-center fade-in">
+            <h1 class="display-3 fw-bold mb-3">
+                <i class="bi bi-lightning-charge-fill"></i> rnxJS Samples
+            </h1>
+            <p class="lead mb-4">
+                Interactive demos showcasing the power of rnxJS - The Bootstrap-Native Framework
+            </p>
+            <div class="d-flex gap-3 justify-content-center flex-wrap">
+                <span class="badge-custom bg-white text-dark">
+                    <i class="bi bi-check-circle-fill text-success"></i> Zero Build Required
+                </span>
+                <span class="badge-custom bg-white text-dark">
+                    <i class="bi bi-check-circle-fill text-success"></i> 46+ Components
+                </span>
+                <span class="badge-custom bg-white text-dark">
+                    <i class="bi bi-check-circle-fill text-success"></i> ~10KB Gzipped
+                </span>
+                <span class="badge-custom bg-white text-dark">
+                    <i class="bi bi-check-circle-fill text-success"></i> Reactive State
+                </span>
+            </div>
+        </div>
+
+        <!-- Quick Start -->
+        <div class="glass p-4 mb-4 fade-in">
+            <h2 class="h4 mb-3">
+                <i class="bi bi-rocket-takeoff-fill text-primary"></i> Quick Start
+            </h2>
+            <div class="code-block">
+                &lt;!-- Include rnxJS --&gt;
+                &lt;script src="https://cdn.jsdelivr.net/npm/@arnelirobles/rnxjs/dist/rnx.global.js"&gt;&lt;/script&gt;
+
+                &lt;script&gt;
+                // Create reactive state
+                const state = rnx.createReactiveState({ count: 0 });
+
+                // Register components
+                rnx.autoRegisterComponents();
+
+                // Load components
+                rnx.loadComponents(document.body, state);
+                &lt;/script&gt;
+            </div>
+        </div>
+
+        <!-- Standalone Demos -->
+        <h2 class="h3 mb-4 gradient-text fw-bold">
+            <i class="bi bi-grid-3x3-gap-fill"></i> Standalone HTML Demos
+        </h2>
+
+        <Row class="g-4 mb-5">
+            <!-- Dashboard Demo -->
+            <Column class="col-md-6 col-lg-4">
+                <div class="card demo-card" onclick="window.location.href='dashboard.html'">
+                    <div class="card-body">
+                        <div class="feature-icon">
+                            <i class="bi bi-speedometer2"></i>
+                        </div>
+                        <h3 class="h5 fw-bold mb-2">Admin Dashboard</h3>
+                        <p class="text-muted mb-3">
+                            Real-time metrics, data tables, and interactive charts
+                        </p>
+                        <div class="d-flex gap-2 flex-wrap">
+                            <span class="badge bg-primary">StatCard</span>
+                            <span class="badge bg-primary">DataTable</span>
+                            <span class="badge bg-primary">TopAppBar</span>
+                        </div>
+                    </div>
+                </div>
+            </Column>
+
+            <!-- Shop Demo -->
+            <Column class="col-md-6 col-lg-4">
+                <div class="card demo-card" onclick="window.location.href='shop.html'">
+                    <div class="card-body">
+                        <div class="feature-icon">
+                            <i class="bi bi-cart-fill"></i>
+                        </div>
+                        <h3 class="h5 fw-bold mb-2">E-Commerce Shop</h3>
+                        <p class="text-muted mb-3">
+                            Product catalog with filtering, cart, and checkout
+                        </p>
+                        <div class="d-flex gap-2 flex-wrap">
+                            <span class="badge bg-success">Card</span>
+                            <span class="badge bg-success">Modal</span>
+                            <span class="badge bg-success">Search</span>
+                        </div>
+                    </div>
+                </div>
+            </Column>
+
+            <!-- Forms Demo -->
+            <Column class="col-md-6 col-lg-4">
+                <div class="card demo-card" onclick="window.location.href='forms.html'">>
+                    <div class="card-body">
+                        <div class="feature-icon">
+                            <i class="bi bi-ui-checks"></i>
+                        </div>
+                        <h3 class="h5 fw-bold mb-2">Form Validation</h3>
+                        <p class="text-muted mb-3">
+                            Built-in validation, reactive forms, and error handling
+                        </p>
+                        <div class="d-flex gap-2 flex-wrap">
+                            <span class="badge bg-warning">Input</span>
+                            <span class="badge bg-warning">Validation</span>
+                            <span class="badge bg-warning">FileUpload</span>
+                        </div>
+                    </div>
+                </div>
+            </Column>
+
+            <!-- DataTable Demo -->
+            <Column class="col-md-6 col-lg-4">
+                <div class="card demo-card" onclick="window.location.href='datatable.html'">
+                    <div class="card-body">
+                        <div class="feature-icon">
+                            <i class="bi bi-table"></i>
+                        </div>
+                        <h3 class="h5 fw-bold mb-2">Data Tables</h3>
+                        <p class="text-muted mb-3">
+                            Sorting, filtering, pagination, and row actions
+                        </p>
+                        <div class="d-flex gap-2 flex-wrap">
+                            <span class="badge bg-info">DataTable</span>
+                            <span class="badge bg-info">Pagination</span>
+                            <span class="badge bg-info">Search</span>
+                        </div>
+                    </div>
+                </div>
+            </Column>
+
+            <!-- Tasks Demo -->
+            <Column class="col-md-6 col-lg-4">
+                <div class="card demo-card" onclick="window.location.href='tasks.html'">
+                    <div class="card-body">
+                        <div class="feature-icon">
+                            <i class="bi bi-check2-square"></i>
+                        </div>
+                        <h3 class="h5 fw-bold mb-2">Task Manager</h3>
+                        <p class="text-muted mb-3">
+                            Todo app with status tracking and filtering
+                        </p>
+                        <div class="d-flex gap-2 flex-wrap">
+                            <span class="badge bg-danger">List</span>
+                            <span class="badge bg-danger">FAB</span>
+                            <span class="badge bg-danger">Chips</span>
+                        </div>
+                    </div>
+                </div>
+            </Column>
+
+            <!-- Chat Demo -->
+            <Column class="col-md-6 col-lg-4">
+                <div class="card demo-card" onclick="window.location.href='chat.html'">
+                    <div class="card-body">
+                        <div class="feature-icon">
+                            <i class="bi bi-chat-dots-fill"></i>
+                        </div>
+                        <h3 class="h5 fw-bold mb-2">Chat Interface</h3>
+                        <p class="text-muted mb-3">
+                            Real-time messaging with reactive message list
+                        </p>
+                        <div class="d-flex gap-2 flex-wrap">
+                            <span class="badge bg-secondary">List</span>
+                            <span class="badge bg-secondary">Input</span>
+                            <span class="badge bg-secondary">Toast</span>
+                        </div>
+                    </div>
+                </div>
+            </Column>
+
+            <!-- Settings Demo -->
+            <Column class="col-md-6 col-lg-4">
+                <div class="card demo-card" onclick="window.location.href='settings.html'">
+                    <div class="card-body">
+                        <div class="feature-icon">
+                            <i class="bi bi-gear-fill"></i>
+                        </div>
+                        <h3 class="h5 fw-bold mb-2">Settings Panel</h3>
+                        <p class="text-muted mb-3">
+                            Theme switching and preferences management
+                        </p>
+                        <div class="d-flex gap-2 flex-wrap">
+                            <span class="badge bg-dark">Tabs</span>
+                            <span class="badge bg-dark">Switch</span>
+                            <span class="badge bg-dark">Slider</span>
+                        </div>
+                    </div>
+                </div>
+            </Column>
+        </Row>
+
+        <!-- Backend Integration Demos -->
+        <h2 class="h3 mb-4 gradient-text fw-bold">
+            <i class="bi bi-server"></i> Backend Integration Demos
+        </h2>
+
+        <Row class="g-4 mb-5">
+            <!-- Django Demo -->
+            <Column class="col-md-6">
+                <Card class="demo-card h-100">
+                    <div class="card-body">
+                        <div class="feature-icon">
+                            <i class="bi bi-file-earmark-code-fill"></i>
+                        </div>
+                        <h3 class="h5 fw-bold mb-2">Django Integration</h3>
+                        <p class="text-muted mb-3">
+                            Complete Django project with django-rnx template tags
+                        </p>
+                        <div class="code-block mb-3" style="font-size: 0.75rem;">
+                            {% load rnx %}
+                            {% rnx_scripts cdn=True theme='bootstrap' %}
+                            {% rnx_state user_data 'state' %}
+                        </div>
+                        <div class="d-flex gap-2 flex-wrap mb-3">
+                            <span class="badge bg-success">Template Tags</span>
+                            <span class="badge bg-success">Forms</span>
+                            <span class="badge bg-success">Plugins</span>
+                        </div>
+                        <p class="small text-muted">
+                            <i class="bi bi-folder-fill"></i> Location: <code>django-demo/</code>
+                        </p>
+                    </div>
+                </Card>
+            </Column>
+
+            <!-- Express Demo -->
+            <Column class="col-md-6">
+                <Card class="demo-card h-100">
+                    <div class="card-body">
+                        <div class="feature-icon">
+                            <i class="bi bi-braces"></i>
+                        </div>
+                        <h3 class="h5 fw-bold mb-2">Express.js Integration</h3>
+                        <p class="text-muted mb-3">
+                            Complete Express app with express-rnx middleware
+                        </p>
+                        <div class="code-block mb-3" style="font-size: 0.75rem;">
+                            &lt;%- rnx.scripts() %&gt;
+                            &lt;%- rnx.state(userData, 'user') %&gt;
+                            &lt;%- rnx.component('Button', { ... }) %&gt;
+                        </div>
+                        <div class="d-flex gap-2 flex-wrap mb-3">
+                            <span class="badge bg-primary">Middleware</span>
+                            <span class="badge bg-primary">EJS</span>
+                            <span class="badge bg-primary">Helpers</span>
+                        </div>
+                        <p class="small text-muted">
+                            <i class="bi bi-folder-fill"></i> Location: <code>express-demo/</code>
+                        </p>
+                    </div>
+                </Card>
+            </Column>
+        </Row>
+
+        <!-- Resources -->
+        <div class="glass p-4 mb-4">
+            <h2 class="h4 mb-3">
+                <i class="bi bi-book-fill text-primary"></i> Resources
+            </h2>
+            <Row class="g-3">
+                <Column class="col-md-4">
+                    <a href="https://github.com/BaryoDev/rnxjs" target="_blank" class="text-decoration-none">
+                        <div class="d-flex align-items-center gap-3 p-3 rounded hover-lift">
+                            <i class="bi bi-github fs-3"></i>
+                            <div>
+                                <div class="fw-bold">GitHub Repository</div>
+                                <small class="text-muted">Source code & docs</small>
+                            </div>
+                        </div>
+                    </a>
+                </Column>
+                <Column class="col-md-4">
+                    <a href="https://www.npmjs.com/package/@arnelirobles/rnxjs" target="_blank"
+                        class="text-decoration-none">
+                        <div class="d-flex align-items-center gap-3 p-3 rounded hover-lift">
+                            <i class="bi bi-box-seam fs-3 text-danger"></i>
+                            <div>
+                                <div class="fw-bold">npm Package</div>
+                                <small class="text-muted">Install via npm</small>
+                            </div>
+                        </div>
+                    </a>
+                </Column>
+                <Column class="col-md-4">
+                    <a href="https://www.npmjs.com/package/@arnelirobles/create-rnxjs-app" target="_blank"
+                        class="text-decoration-none">
+                        <div class="d-flex align-items-center gap-3 p-3 rounded hover-lift">
+                            <i class="bi bi-terminal-fill fs-3 text-success"></i>
+                            <div>
+                                <div class="fw-bold">CLI Tool</div>
+                                <small class="text-muted">Quick scaffolding</small>
+                            </div>
+                        </div>
+                    </a>
+                </Column>
+            </Row>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center text-white mt-5">
+            <p class="mb-2">
+                <strong>rnxJS</strong> - The Bootstrap-Native Framework for Production Apps
+            </p>
+            <p class="small opacity-75">
+                Built with ❤️ by <a href="https://github.com/BaryoDev" class="text-white">BaryoDev</a> |
+                Licensed under MPL-2.0
+            </p>
+        </div>
+    </Container>
+
+    <!-- rnxJS Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@arnelirobles/rnxjs/dist/rnx.global.js"></script>
+
+    <script>
+        // Initialize rnxJS
+        const { autoRegisterComponents, loadComponents } = rnx;
+
+        // Register all components
+        autoRegisterComponents();
+
+        // Load components
+        loadComponents(document.body);
+
+        // Add smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

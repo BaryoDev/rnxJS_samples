@@ -1,0 +1,26 @@
+{
+    "name": "express-rnx-demo",
+    "version": "1.0.0",
+    "description": "Express.js + rnxJS integration demo",
+    "main": "app.js",
+    "scripts": {
+        "start": "node app.js",
+        "dev": "nodemon app.js"
+    },
+    "keywords": [
+        "express",
+        "rnxjs",
+        "reactive",
+        "demo"
+    ],
+    "author": "",
+    "license": "MIT",
+    "dependencies": {
+        "express": "^4.18.2",
+        "ejs": "^3.1.9",
+        "@arnelirobles/express-rnx": "^1.0.0"
+    },
+    "devDependencies": {
+        "nodemon": "^3.0.1"
+    }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "rnxjs_samples",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@arnelirobles/django-rnx": "^1.0.0",
+    "@arnelirobles/express-rnx": "^1.0.0",
+    "@arnelirobles/rnxjs": "^1.0.0"
+  }
+}

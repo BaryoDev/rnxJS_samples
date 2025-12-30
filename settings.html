@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings Panel - rnxJS Demo</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+</head>
+
+<body>
+    <Container class="py-4">
+        <div class="glass p-3 mb-4 d-flex justify-content-between align-items-center">
+            <h1 class="h4 mb-0 fw-bold">
+                <i class="bi bi-gear-fill text-primary"></i> Settings
+            </h1>
+            <div class="d-flex gap-2">
+                <Button variant="outline-primary" onclick="window.location.href='index.html'">
+                    <i class="bi bi-house-fill"></i> Home
+                </Button>
+                <Button variant="success" onclick="saveSettings()">
+                    <i class="bi bi-check-circle-fill"></i> Save
+                </Button>
+            </div>
+        </div>
+
+        <Row class="g-4">
+            <Column class="col-md-3">
+                <div class="glass">
+                    <div class="list-group list-group-flush">
+                        <button class="list-group-item list-group-item-action active" onclick="showTab('profile')">
+                            <i class="bi bi-person-fill me-2"></i> Profile
+                        </button>
+                        <button class="list-group-item list-group-item-action" onclick="showTab('appearance')">
+                            <i class="bi bi-palette-fill me-2"></i> Appearance
+                        </button>
+                        <button class="list-group-item list-group-item-action" onclick="showTab('notifications')">
+                            <i class="bi bi-bell-fill me-2"></i> Notifications
+                        </button>
+                        <button class="list-group-item list-group-item-action" onclick="showTab('privacy')">
+                            <i class="bi bi-shield-fill me-2"></i> Privacy
+                        </button>
+                        <button class="list-group-item list-group-item-action" onclick="showTab('advanced')">
+                            <i class="bi bi-sliders me-2"></i> Advanced
+                        </button>
+                    </div>
+                </div>
+            </Column>
+
+            <Column class="col-md-9">
+                <!-- Profile Tab -->
+                <div id="tab-profile" class="settings-tab glass">
+                    <div class="card-body">
+                        <h2 class="h5 fw-bold mb-4">Profile Settings</h2>
+
+                        <div class="mb-4 text-center">
+                            <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-3"
+                                style="width: 100px; height: 100px; font-size: 3rem;">
+                                <i class="bi bi-person-fill"></i>
+                            </div>
+                            <div>
+                                <button class="btn btn-sm btn-outline-primary">Change Photo</button>
+                            </div>
+                        </div>
+
+                        <Row class="g-3">
+                            <Column class="col-md-6">
+                                <label class="form-label">First Name</label>
+                                <Input data-bind="settings.firstName" />
+                            </Column>
+                            <Column class="col-md-6">
+                                <label class="form-label">Last Name</label>
+                                <Input data-bind="settings.lastName" />
+                            </Column>
+                            <Column class="col-12">
+                                <label class="form-label">Email</label>
+                                <Input type="email" data-bind="settings.email" />
+                            </Column>
+                            <Column class="col-12">
+                                <label class="form-label">Bio</label>
+                                <Textarea rows="4" data-bind="settings.bio" />
+                            </Column>
+                        </Row>
+                    </div>
+                </div>
+
+                <!-- Appearance Tab -->
+                <div id="tab-appearance" class="settings-tab glass" style="display: none;">
+                    <div class="card-body">
+                        <h2 class="h5 fw-bold mb-4">Appearance</h2>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Theme</label>
+                            <div class="d-flex gap-3">
+                                <div class="form-check">
+                                    <Radio name="theme" value="light" data-bind="settings.theme" label="Light" />
+                                </div>
+                                <div class="form-check">
+                                    <Radio name="theme" value="dark" data-bind="settings.theme" label="Dark" />
+                                </div>
+                                <div class="form-check">
+                                    <Radio name="theme" value="auto" data-bind="settings.theme" label="Auto" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Font Size</label>
+                            <input type="range" class="form-range" min="12" max="20" value="16"
+                                onchange="document.getElementById('font-size-value').textContent = this.value + 'px'">
+                            <small class="text-muted">Current: <span id="font-size-value">16px</span></small>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Accent Color</label>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-primary rounded-circle"
+                                    style="width: 40px; height: 40px;"></button>
+                                <button class="btn btn-success rounded-circle"
+                                    style="width: 40px; height: 40px;"></button>
+                                <button class="btn btn-danger rounded-circle"
+                                    style="width: 40px; height: 40px;"></button>
+                                <button class="btn btn-warning rounded-circle"
+                                    style="width: 40px; height: 40px;"></button>
+                                <button class="btn btn-info rounded-circle" style="width: 40px; height: 40px;"></button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <Switch data-bind="settings.compactMode" label="Compact Mode" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notifications Tab -->
+                <div id="tab-notifications" class="settings-tab glass" style="display: none;">
+                    <div class="card-body">
+                        <h2 class="h5 fw-bold mb-4">Notifications</h2>
+
+                        <div class="mb-3">
+                            <Switch data-bind="settings.emailNotifications" label="Email Notifications" />
+                            <small class="text-muted d-block mt-1">Receive email updates about your activity</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <Switch data-bind="settings.pushNotifications" label="Push Notifications" />
+                            <small class="text-muted d-block mt-1">Receive push notifications on your device</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <Switch data-bind="settings.smsNotifications" label="SMS Notifications" />
+                            <small class="text-muted d-block mt-1">Receive text messages for important updates</small>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <h3 class="h6 fw-bold mb-3">Notification Preferences</h3>
+
+                        <div class="mb-2">
+                            <Checkbox data-bind="settings.notifyComments" label="New comments" />
+                        </div>
+                        <div class="mb-2">
+                            <Checkbox data-bind="settings.notifyMentions" label="Mentions" />
+                        </div>
+                        <div class="mb-2">
+                            <Checkbox data-bind="settings.notifyFollowers" label="New followers" />
+                        </div>
+                        <div class="mb-2">
+                            <Checkbox data-bind="settings.notifyMessages" label="Direct messages" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Privacy Tab -->
+                <div id="tab-privacy" class="settings-tab glass" style="display: none;">
+                    <div class="card-body">
+                        <h2 class="h5 fw-bold mb-4">Privacy & Security</h2>
+
+                        <div class="mb-3">
+                            <Switch data-bind="settings.profilePublic" label="Public Profile" />
+                            <small class="text-muted d-block mt-1">Make your profile visible to everyone</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <Switch data-bind="settings.showEmail" label="Show Email" />
+                            <small class="text-muted d-block mt-1">Display your email on your profile</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <Switch data-bind="settings.twoFactorAuth" label="Two-Factor Authentication" />
+                            <small class="text-muted d-block mt-1">Add an extra layer of security</small>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <h3 class="h6 fw-bold mb-3">Data & Privacy</h3>
+
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-outline-primary text-start">
+                                <i class="bi bi-download me-2"></i> Download Your Data
+                            </button>
+                            <button class="btn btn-outline-warning text-start">
+                                <i class="bi bi-shield-check me-2"></i> Privacy Checkup
+                            </button>
+                            <button class="btn btn-outline-danger text-start">
+                                <i class="bi bi-trash-fill me-2"></i> Delete Account
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Advanced Tab -->
+                <div id="tab-advanced" class="settings-tab glass" style="display: none;">
+                    <div class="card-body">
+                        <h2 class="h5 fw-bold mb-4">Advanced Settings</h2>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Language</label>
+                            <Select data-bind="settings.language">
+                                <option value="en">English</option>
+                                <option value="es">Español</option>
+                                <option value="fr">Français</option>
+                                <option value="de">Deutsch</option>
+                            </Select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Timezone</label>
+                            <Select data-bind="settings.timezone">
+                                <option value="UTC">UTC</option>
+                                <option value="PST">Pacific Time</option>
+                                <option value="EST">Eastern Time</option>
+                                <option value="GMT">GMT</option>
+                            </Select>
+                        </div>
+
+                        <div class="mb-3">
+                            <Switch data-bind="settings.developerMode" label="Developer Mode" />
+                            <small class="text-muted d-block mt-1">Enable advanced features for developers</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <Switch data-bind="settings.analytics" label="Analytics" />
+                            <small class="text-muted d-block mt-1">Help us improve by sharing usage data</small>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <button class="btn btn-outline-danger">
+                            <i class="bi bi-arrow-counterclockwise me-2"></i> Reset All Settings
+                        </button>
+                    </div>
+                </div>
+            </Column>
+        </Row>
+    </Container>
+
+    <script src="https://cdn.jsdelivr.net/npm/@arnelirobles/rnxjs/dist/rnx.global.js"></script>
+    <script>
+        const { createReactiveState, autoRegisterComponents, loadComponents } = rnx;
+
+        const state = createReactiveState({
+            settings: {
+                firstName: 'John',
+                lastName: 'Doe',
+                email: 'john.doe@example.com',
+                bio: 'Software developer passionate about building great products.',
+                theme: 'light',
+                compactMode: false,
+                emailNotifications: true,
+                pushNotifications: true,
+                smsNotifications: false,
+                notifyComments: true,
+                notifyMentions: true,
+                notifyFollowers: false,
+                notifyMessages: true,
+                profilePublic: true,
+                showEmail: false,
+                twoFactorAuth: false,
+                language: 'en',
+                timezone: 'UTC',
+                developerMode: false,
+                analytics: true
+            }
+        });
+
+        autoRegisterComponents();
+        loadComponents(document.body, state);
+
+        function showTab(tabName) {
+            document.querySelectorAll('.settings-tab').forEach(tab => tab.style.display = 'none');
+            document.getElementById(`tab-${tabName}`).style.display = 'block';
+
+            document.querySelectorAll('.list-group-item').forEach(item => item.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function saveSettings() {
+            alert('Settings saved successfully!');
+            console.log('Saved settings:', state.settings);
+        }
+    </script>
+</body>
+
+</html>

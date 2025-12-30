@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load rnx %}
+
+{% block title %}Home - rnxJS + Django{% endblock %}
+
+{% block content %}
+{% rnx_state app_state 'state' %}
+
+<h2 data-bind="state.page_title" class="mb-4"></h2>
+
+<!-- Stats Cards -->
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3 class="display-4 fw-bold text-primary" data-bind="state.stats.projects"></h3>
+                <p class="text-muted">Projects</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3 class="display-4 fw-bold text-success" data-bind="state.stats.tasks"></h3>
+                <p class="text-muted">Tasks</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3 class="display-4 fw-bold text-warning" data-bind="state.stats.completed"></h3>
+                <p class="text-muted">Completed</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- User Info -->
+<div class="card">
+    <div class="card-body">
+        <h3 class="h5 fw-bold mb-3">User Information</h3>
+        <p><strong>Name:</strong> <span data-bind="state.user.name"></span></p>
+        <p><strong>Email:</strong> <span data-bind="state.user.email"></span></p>
+        <p><strong>Role:</strong> <span class="badge bg-primary" data-bind="state.user.role"></span></p>
+    </div>
+</div>
+
+<!-- Demo Components -->
+<div class="mt-4">
+    <h3 class="h5 fw-bold mb-3">rnxJS Components</h3>
+    <div class="d-flex gap-2 flex-wrap">
+        {% rnx_component 'Button' variant='primary' label='Primary Button' %}
+        {% rnx_component 'Button' variant='success' label='Success Button' %}
+        {% rnx_component 'Button' variant='warning' label='Warning Button' %}
+    </div>
+</div>
+
+<script>
+    // You can add custom JavaScript here
+    console.log('Django + rnxJS working!', window.state);
+</script>
+{% endblock %}

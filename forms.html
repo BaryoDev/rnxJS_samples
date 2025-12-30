@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Validation - rnxJS Demo</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+</head>
+
+<body>
+    <Container class="py-4">
+        <!-- Header -->
+        <div class="glass p-3 mb-4 d-flex justify-content-between align-items-center">
+            <h1 class="h4 mb-0 fw-bold">
+                <i class="bi bi-ui-checks text-primary"></i> Form Validation Demo
+            </h1>
+            <Button variant="outline-primary" onclick="window.location.href='index.html'">
+                <i class="bi bi-house-fill"></i> Home
+            </Button>
+        </div>
+
+        <!-- Multi-Step Form -->
+        <div class="glass">
+            <div class="card-body">
+                <!-- Progress Steps -->
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between mb-2">
+                        <div class="text-center flex-fill">
+                            <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center"
+                                style="width: 40px; height: 40px;" id="step1-indicator">
+                                <span>1</span>
+                            </div>
+                            <div class="small mt-1">Personal Info</div>
+                        </div>
+                        <div class="text-center flex-fill">
+                            <div class="rounded-circle bg-secondary text-white d-inline-flex align-items-center justify-content-center"
+                                style="width: 40px; height: 40px;" id="step2-indicator">
+                                <span>2</span>
+                            </div>
+                            <div class="small mt-1">Account Details</div>
+                        </div>
+                        <div class="text-center flex-fill">
+                            <div class="rounded-circle bg-secondary text-white d-inline-flex align-items-center justify-content-center"
+                                style="width: 40px; height: 40px;" id="step3-indicator">
+                                <span>3</span>
+                            </div>
+                            <div class="small mt-1">Preferences</div>
+                        </div>
+                    </div>
+                    <div class="progress" style="height: 4px;">
+                        <div class="progress-bar" id="progress-bar" style="width: 33%"></div>
+                    </div>
+                </div>
+
+                <!-- Step 1: Personal Info -->
+                <div id="step1" class="form-step">
+                    <h3 class="h5 fw-bold mb-3">Step 1: Personal Information</h3>
+
+                    <Row class="g-3">
+                        <Column class="col-md-6">
+                            <label class="form-label">First Name *</label>
+                            <Input placeholder="John" data-bind="form.firstName" data-rule="required" />
+                            <div class="text-danger small" data-bind="errors.form.firstName"></div>
+                        </Column>
+                        <Column class="col-md-6">
+                            <label class="form-label">Last Name *</label>
+                            <Input placeholder="Doe" data-bind="form.lastName" data-rule="required" />
+                            <div class="text-danger small" data-bind="errors.form.lastName"></div>
+                        </Column>
+                        <Column class="col-md-6">
+                            <label class="form-label">Email *</label>
+                            <Input type="email" placeholder="john@example.com" data-bind="form.email"
+                                data-rule="required|email" />
+                            <div class="text-danger small" data-bind="errors.form.email"></div>
+                        </Column>
+                        <Column class="col-md-6">
+                            <label class="form-label">Phone</label>
+                            <Input type="tel" placeholder="+1 (555) 123-4567" data-bind="form.phone" />
+                        </Column>
+                        <Column class="col-12">
+                            <label class="form-label">Address</label>
+                            <Textarea rows="3" placeholder="123 Main St, City, State, ZIP"
+                                data-bind="form.address"></Textarea>
+                        </Column>
+                    </Row>
+
+                    <div class="mt-4 d-flex justify-content-end">
+                        <Button variant="primary" onclick="nextStep(2)">
+                            Next <i class="bi bi-arrow-right"></i>
+                        </Button>
+                    </div>
+                </div>
+
+                <!-- Step 2: Account Details -->
+                <div id="step2" class="form-step" style="display: none;">
+                    <h3 class="h5 fw-bold mb-3">Step 2: Account Details</h3>
+
+                    <Row class="g-3">
+                        <Column class="col-md-6">
+                            <label class="form-label">Username *</label>
+                            <Input placeholder="johndoe" data-bind="form.username" data-rule="required|min:3" />
+                            <div class="text-danger small" data-bind="errors.form.username"></div>
+                        </Column>
+                        <Column class="col-md-6">
+                            <label class="form-label">Password *</label>
+                            <Input type="password" placeholder="••••••••" data-bind="form.password"
+                                data-rule="required|min:8" />
+                            <div class="text-danger small" data-bind="errors.form.password"></div>
+                        </Column>
+                        <Column class="col-12">
+                            <label class="form-label">Role</label>
+                            <Select data-bind="form.role">
+                                <option value="">Select a role</option>
+                                <option value="user">User</option>
+                                <option value="admin">Admin</option>
+                                <option value="manager">Manager</option>
+                            </Select>
+                        </Column>
+                        <Column class="col-12">
+                            <label class="form-label">Profile Picture</label>
+                            <input type="file" class="form-control" accept="image/*" />
+                            <small class="text-muted">Max file size: 2MB</small>
+                        </Column>
+                    </Row>
+
+                    <div class="mt-4 d-flex justify-content-between">
+                        <Button variant="outline-secondary" onclick="prevStep(1)">
+                            <i class="bi bi-arrow-left"></i> Previous
+                        </Button>
+                        <Button variant="primary" onclick="nextStep(3)">
+                            Next <i class="bi bi-arrow-right"></i>
+                        </Button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Preferences -->
+                <div id="step3" class="form-step" style="display: none;">
+                    <h3 class="h5 fw-bold mb-3">Step 3: Preferences</h3>
+
+                    <div class="mb-3">
+                        <label class="form-label">Notifications</label>
+                        <div class="form-check">
+                            <Checkbox data-bind="form.emailNotifications" label="Email notifications" />
+                        </div>
+                        <div class="form-check">
+                            <Checkbox data-bind="form.smsNotifications" label="SMS notifications" />
+                        </div>
+                        <div class="form-check">
+                            <Checkbox data-bind="form.pushNotifications" label="Push notifications" />
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Newsletter Frequency</label>
+                        <div class="form-check">
+                            <Radio name="newsletter" value="daily" data-bind="form.newsletter" label="Daily" />
+                        </div>
+                        <div class="form-check">
+                            <Radio name="newsletter" value="weekly" data-bind="form.newsletter" label="Weekly" />
+                        </div>
+                        <div class="form-check">
+                            <Radio name="newsletter" value="monthly" data-bind="form.newsletter" label="Monthly" />
+                        </div>
+                        <div class="form-check">
+                            <Radio name="newsletter" value="never" data-bind="form.newsletter" label="Never" />
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Theme</label>
+                        <Switch data-bind="form.darkMode" label="Dark Mode" />
+                    </div>
+
+                    <div class="mt-4 d-flex justify-content-between">
+                        <Button variant="outline-secondary" onclick="prevStep(2)">
+                            <i class="bi bi-arrow-left"></i> Previous
+                        </Button>
+                        <Button variant="success" onclick="submitForm()">
+                            <i class="bi bi-check-circle-fill"></i> Submit
+                        </Button>
+                    </div>
+                </div>
+
+                <!-- Success Message -->
+                <div id="success-message" style="display: none;" class="text-center py-5">
+                    <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
+                    <h3 class="mt-3">Registration Successful!</h3>
+                    <p class="text-muted">Your account has been created successfully.</p>
+                    <Button variant="primary" onclick="resetForm()">
+                        Create Another Account
+                    </Button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Data Preview -->
+        <div class="glass mt-4">
+            <div class="card-body">
+                <h3 class="h5 fw-bold mb-3">Form Data (Live Preview)</h3>
+                <pre class="code-block" id="form-preview"></pre>
+            </div>
+        </div>
+    </Container>
+
+    <script src="https://cdn.jsdelivr.net/npm/@arnelirobles/rnxjs/dist/rnx.global.js"></script>
+    <script>
+        const { createReactiveState, autoRegisterComponents, loadComponents } = rnx;
+
+        const state = createReactiveState({
+            form: {
+                firstName: '',
+                lastName: '',
+                email: '',
+                phone: '',
+                address: '',
+                username: '',
+                password: '',
+                role: '',
+                emailNotifications: true,
+                smsNotifications: false,
+                pushNotifications: true,
+                newsletter: 'weekly',
+                darkMode: false
+            },
+            errors: {}
+        });
+
+        autoRegisterComponents();
+        loadComponents(document.body, state);
+
+        let currentStep = 1;
+
+        function updatePreview() {
+            document.getElementById('form-preview').textContent = JSON.stringify(state.form, null, 2);
+        }
+
+        function nextStep(step) {
+            document.getElementById(`step${currentStep}`).style.display = 'none';
+            document.getElementById(`step${step}`).style.display = 'block';
+
+            document.getElementById(`step${currentStep}-indicator`).classList.remove('bg-primary');
+            document.getElementById(`step${currentStep}-indicator`).classList.add('bg-success');
+            document.getElementById(`step${step}-indicator`).classList.remove('bg-secondary');
+            document.getElementById(`step${step}-indicator`).classList.add('bg-primary');
+
+            currentStep = step;
+            document.getElementById('progress-bar').style.width = `${(step / 3) * 100}%`;
+        }
+
+        function prevStep(step) {
+            document.getElementById(`step${currentStep}`).style.display = 'none';
+            document.getElementById(`step${step}`).style.display = 'block';
+
+            document.getElementById(`step${currentStep}-indicator`).classList.remove('bg-primary');
+            document.getElementById(`step${currentStep}-indicator`).classList.add('bg-secondary');
+            document.getElementById(`step${step}-indicator`).classList.remove('bg-success');
+            document.getElementById(`step${step}-indicator`).classList.add('bg-primary');
+
+            currentStep = step;
+            document.getElementById('progress-bar').style.width = `${(step / 3) * 100}%`;
+        }
+
+        function submitForm() {
+            document.getElementById('step3').style.display = 'none';
+            document.getElementById('success-message').style.display = 'block';
+        }
+
+        function resetForm() {
+            Object.keys(state.form).forEach(key => {
+                if (typeof state.form[key] === 'boolean') state.form[key] = false;
+                else state.form[key] = '';
+            });
+            state.form.emailNotifications = true;
+            state.form.pushNotifications = true;
+            state.form.newsletter = 'weekly';
+
+            document.getElementById('success-message').style.display = 'none';
+            document.getElementById('step1').style.display = 'block';
+            currentStep = 1;
+
+            document.getElementById('step1-indicator').classList.add('bg-primary');
+            document.getElementById('step2-indicator').classList.remove('bg-success');
+            document.getElementById('step2-indicator').classList.add('bg-secondary');
+            document.getElementById('step3-indicator').classList.remove('bg-success');
+            document.getElementById('step3-indicator').classList.add('bg-secondary');
+            document.getElementById('progress-bar').style.width = '33%';
+        }
+
+        // Update preview on any form change
+        Object.keys(state.form).forEach(key => {
+            state.subscribe(`form.${key}`, updatePreview);
+        });
+
+        updatePreview();
+    </script>
+</body>
+
+</html>

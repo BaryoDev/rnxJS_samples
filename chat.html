@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Interface - rnxJS Demo</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+</head>
+
+<body>
+    <Container class="py-4">
+        <div class="glass p-3 mb-4 d-flex justify-content-between align-items-center">
+            <h1 class="h4 mb-0 fw-bold">
+                <i class="bi bi-chat-dots-fill text-primary"></i> Chat Interface
+            </h1>
+            <Button variant="outline-primary" onclick="window.location.href='index.html'">
+                <i class="bi bi-house-fill"></i> Home
+            </Button>
+        </div>
+
+        <Row class="g-4">
+            <Column class="col-md-4">
+                <div class="glass h-100">
+                    <div class="card-body">
+                        <h2 class="h6 fw-bold mb-3">Contacts</h2>
+                        <Input placeholder="Search contacts..." data-bind="searchContact" class="mb-3" />
+
+                        <div id="contacts-list"></div>
+                    </div>
+                </div>
+            </Column>
+
+            <Column class="col-md-8">
+                <div class="glass">
+                    <div class="card-body p-0">
+                        <!-- Chat Header -->
+                        <div class="p-3 border-bottom d-flex align-items-center gap-3">
+                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
+                                style="width: 40px; height: 40px;">
+                                <i class="bi bi-person-fill"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="fw-bold" data-bind="activeChat.name"></div>
+                                <small class="text-success">
+                                    <i class="bi bi-circle-fill" style="font-size: 0.5rem;"></i> Online
+                                </small>
+                            </div>
+                            <button class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+                        </div>
+
+                        <!-- Messages -->
+                        <div class="chat-messages" id="messages-container"></div>
+
+                        <!-- Input -->
+                        <div class="p-3 border-top">
+                            <div class="d-flex gap-2">
+                                <Input placeholder="Type a message..." data-bind="newMessage"
+                                    onkeypress="if(event.key==='Enter') sendMessage()" class="flex-grow-1" />
+                                <button class="btn btn-primary" onclick="sendMessage()">
+                                    <i class="bi bi-send-fill"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </Column>
+        </Row>
+    </Container>
+
+    <script src="https://cdn.jsdelivr.net/npm/@arnelirobles/rnxjs/dist/rnx.global.js"></script>
+    <script>
+        const { createReactiveState, autoRegisterComponents, loadComponents } = rnx;
+
+        const contacts = [
+            { id: 1, name: 'Alice Johnson', status: 'online', lastMessage: 'Hey! How are you?' },
+            { id: 2, name: 'Bob Smith', status: 'offline', lastMessage: 'See you tomorrow!' },
+            { id: 3, name: 'Charlie Brown', status: 'online', lastMessage: 'Thanks for your help' },
+            { id: 4, name: 'Diana Prince', status: 'online', lastMessage: 'Let\'s meet at 3pm' },
+        ];
+
+        const state = createReactiveState({
+            searchContact: '',
+            newMessage: '',
+            activeChat: contacts[0],
+            messages: [
+                { id: 1, text: 'Hey! How are you?', sent: false, time: '10:30 AM' },
+                { id: 2, text: 'I\'m doing great! How about you?', sent: true, time: '10:31 AM' },
+                { id: 3, text: 'Pretty good! Working on a new project', sent: false, time: '10:32 AM' },
+                { id: 4, text: 'That sounds exciting! Tell me more', sent: true, time: '10:33 AM' },
+            ]
+        });
+
+        autoRegisterComponents();
+        loadComponents(document.body, state);
+
+        function renderContacts() {
+            const filtered = contacts.filter(c =>
+                c.name.toLowerCase().includes(state.searchContact.toLowerCase())
+            );
+
+            const container = document.getElementById('contacts-list');
+            container.innerHTML = filtered.map(contact => `
+                <div class="d-flex align-items-center gap-3 p-2 rounded mb-2 hover-lift ${contact.id === state.activeChat.id ? 'bg-light' : ''}" 
+                     style="cursor: pointer;" onclick="selectChat(${contact.id})">
+                    <div class="rounded-circle bg-${contact.status === 'online' ? 'success' : 'secondary'} text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="fw-bold">${contact.name}</div>
+                        <small class="text-muted">${contact.lastMessage}</small>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderMessages() {
+            const container = document.getElementById('messages-container');
+            container.innerHTML = state.messages.map(msg => `
+                <div class="chat-message ${msg.sent ? 'sent' : 'received'}">
+                    <div class="chat-bubble ${msg.sent ? 'sent' : 'received'}">
+                        <div>${msg.text}</div>
+                        <small class="text-${msg.sent ? 'white-50' : 'muted'} d-block mt-1">${msg.time}</small>
+                    </div>
+                </div>
+            `).join('');
+
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function sendMessage() {
+            if (!state.newMessage.trim()) return;
+
+            const now = new Date();
+            const time = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+
+            state.messages.push({
+                id: Date.now(),
+                text: state.newMessage,
+                sent: true,
+                time: time
+            });
+
+            state.newMessage = '';
+            renderMessages();
+
+            // Simulate response
+            setTimeout(() => {
+                state.messages.push({
+                    id: Date.now(),
+                    text: 'Thanks for your message! I\'ll get back to you soon.',
+                    sent: false,
+                    time: time
+                });
+                renderMessages();
+            }, 1500);
+        }
+
+        function selectChat(id) {
+            state.activeChat = contacts.find(c => c.id === id);
+            renderMessages();
+        }
+
+        state.subscribe('searchContact', renderContacts);
+
+        renderContacts();
+        renderMessages();
+    </script>
+</body>
+
+</html>

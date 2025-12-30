@@ -1,0 +1,62 @@
+<% const appState={ user: user, notifications: notifications, page: 'home' }; %>
+
+    <%- rnx.state(appState, 'appState' ) %>
+
+        <h2 class="mb-4">Welcome to rnxJS + Express!</h2>
+
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle-fill"></i>
+            <strong>Hello, <span data-bind="appState.user.name"></span>!</strong>
+            This demo shows how to use rnxJS with Express.js and EJS templates.
+        </div>
+
+        <!-- User Card -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h3 class="h5 fw-bold mb-3">User Information</h3>
+                <p><strong>Name:</strong> <span data-bind="appState.user.name"></span></p>
+                <p><strong>Email:</strong> <span data-bind="appState.user.email"></span></p>
+                <p><strong>Role:</strong> <span class="badge bg-primary" data-bind="appState.user.role"></span></p>
+            </div>
+        </div>
+
+        <!-- Notifications -->
+        <div class="card">
+            <div class="card-body">
+                <h3 class="h5 fw-bold mb-3">Recent Notifications</h3>
+                <% notifications.forEach(notif=> { %>
+                    <div class="d-flex align-items-start gap-3 mb-3 pb-3 border-bottom">
+                        <div>
+                            <i
+                                class="bi bi-<%= notif.type === 'success' ? 'check-circle-fill text-success' : notif.type === 'warning' ? 'exclamation-triangle-fill text-warning' : 'info-circle-fill text-info' %> fs-3"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <strong>
+                                <%= notif.title %>
+                            </strong>
+                            <p class="mb-1">
+                                <%= notif.message %>
+                            </p>
+                            <small class="text-muted">
+                                <%= notif.time %>
+                            </small>
+                        </div>
+                    </div>
+                    <% }); %>
+            </div>
+        </div>
+
+        <!-- Demo Components -->
+        <div class="mt-4">
+            <h3 class="h5 fw-bold mb-3">rnxJS Components Demo</h3>
+            <div class="d-flex gap-2 flex-wrap">
+                <%- rnx.component('Button', { variant: 'primary' , label: 'Primary Button' }) %>
+                    <%- rnx.component('Button', { variant: 'success' , label: 'Success Button' }) %>
+                        <%- rnx.component('Button', { variant: 'warning' , label: 'Warning Button' ,
+                            onclick: 'window.rnx.toast.success("Button clicked!")' }) %>
+            </div>
+        </div>
+
+        <script>
+            console.log('Express + rnxJS working!', window.appState);
+        </script>

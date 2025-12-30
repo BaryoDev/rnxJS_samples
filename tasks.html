@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager - rnxJS Demo</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+</head>
+
+<body>
+    <Container class="py-4">
+        <div class="glass p-3 mb-4 d-flex justify-content-between align-items-center">
+            <h1 class="h4 mb-0 fw-bold">
+                <i class="bi bi-check2-square text-primary"></i> Task Manager
+            </h1>
+            <Button variant="outline-primary" onclick="window.location.href='index.html'">
+                <i class="bi bi-house-fill"></i> Home
+            </Button>
+        </div>
+
+        <Row class="g-4 mb-4">
+            <Column class="col-md-4">
+                <div class="stat-card">
+                    <div class="stat-label">Total Tasks</div>
+                    <div class="stat-value" data-bind="stats.total"></div>
+                </div>
+            </Column>
+            <Column class="col-md-4">
+                <div class="stat-card">
+                    <div class="stat-label">In Progress</div>
+                    <div class="stat-value text-warning" data-bind="stats.inProgress"></div>
+                </div>
+            </Column>
+            <Column class="col-md-4">
+                <div class="stat-card">
+                    <div class="stat-label">Completed</div>
+                    <div class="stat-value text-success" data-bind="stats.completed"></div>
+                </div>
+            </Column>
+        </Row>
+
+        <div class="glass">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2 class="h5 fw-bold mb-0">My Tasks</h2>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-sm ${state.filter === 'all' ? 'btn-primary' : 'btn-outline-primary'}"
+                            onclick="filterTasks('all')">All</button>
+                        <button class="btn btn-sm ${state.filter === 'todo' ? 'btn-primary' : 'btn-outline-primary'}"
+                            onclick="filterTasks('todo')">To Do</button>
+                        <button
+                            class="btn btn-sm ${state.filter === 'inprogress' ? 'btn-primary' : 'btn-outline-primary'}"
+                            onclick="filterTasks('inprogress')">In Progress</button>
+                        <button class="btn btn-sm ${state.filter === 'done' ? 'btn-primary' : 'btn-outline-primary'}"
+                            onclick="filterTasks('done')">Done</button>
+                    </div>
+                </div>
+
+                <div id="tasks-list"></div>
+
+                <div class="mt-3">
+                    <Input placeholder="Add a new task..." data-bind="newTask"
+                        onkeypress="if(event.key==='Enter') addTask()" />
+                </div>
+            </div>
+        </div>
+
+        <button class="btn btn-primary rounded-circle position-fixed bottom-0 end-0 m-4"
+            style="width: 60px; height: 60px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"
+            onclick="document.querySelector('[data-bind=newTask]').focus()">
+            <i class="bi bi-plus-lg fs-4"></i>
+        </button>
+    </Container>
+
+    <script src="https://cdn.jsdelivr.net/npm/@arnelirobles/rnxjs/dist/rnx.global.js"></script>
+    <script>
+        const { createReactiveState, autoRegisterComponents, loadComponents } = rnx;
+
+        const state = createReactiveState({
+            newTask: '',
+            filter: 'all',
+            tasks: [
+                { id: 1, title: 'Design new landing page', status: 'done', priority: 'high' },
+                { id: 2, title: 'Fix login bug', status: 'inprogress', priority: 'high' },
+                { id: 3, title: 'Write documentation', status: 'todo', priority: 'medium' },
+                { id: 4, title: 'Code review for PR #123', status: 'todo', priority: 'low' },
+                { id: 5, title: 'Update dependencies', status: 'inprogress', priority: 'medium' },
+            ],
+            stats: { total: 5, inProgress: 2, completed: 1 }
+        });
+
+        autoRegisterComponents();
+        loadComponents(document.body, state);
+
+        function renderTasks() {
+            const filtered = state.filter === 'all'
+                ? state.tasks
+                : state.tasks.filter(t => t.status === state.filter);
+
+            const container = document.getElementById('tasks-list');
+            container.innerHTML = filtered.map(task => `
+                <div class="task-item ${task.status === 'done' ? 'completed' : ''}">
+                    <input type="checkbox" class="form-check-input me-3" 
+                           ${task.status === 'done' ? 'checked' : ''} 
+                           onchange="toggleTask(${task.id})">
+                    <div class="flex-grow-1">
+                        <div class="task-title">${task.title}</div>
+                        <div class="d-flex gap-2 mt-1">
+                            <span class="badge ${task.status === 'done' ? 'bg-success' : task.status === 'inprogress' ? 'bg-warning' : 'bg-secondary'}">${task.status}</span>
+                            <span class="badge ${task.priority === 'high' ? 'bg-danger' : task.priority === 'medium' ? 'bg-warning' : 'bg-info'}">${task.priority}</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-sm btn-outline-danger" onclick="deleteTask(${task.id})">
+                        <i class="bi bi-trash-fill"></i>
+                    </button>
+                </div>
+            `).join('');
+
+            updateStats();
+        }
+
+        function addTask() {
+            if (!state.newTask.trim()) return;
+
+            state.tasks.push({
+                id: Date.now(),
+                title: state.newTask,
+                status: 'todo',
+                priority: 'medium'
+            });
+            state.newTask = '';
+            renderTasks();
+        }
+
+        function toggleTask(id) {
+            const task = state.tasks.find(t => t.id === id);
+            task.status = task.status === 'done' ? 'todo' : 'done';
+            renderTasks();
+        }
+
+        function deleteTask(id) {
+            state.tasks = state.tasks.filter(t => t.id !== id);
+            renderTasks();
+        }
+
+        function filterTasks(filter) {
+            state.filter = filter;
+            renderTasks();
+        }
+
+        function updateStats() {
+            state.stats.total = state.tasks.length;
+            state.stats.inProgress = state.tasks.filter(t => t.status === 'inprogress').length;
+            state.stats.completed = state.tasks.filter(t => t.status === 'done').length;
+        }
+
+        renderTasks();
+    </script>
+</body>
+
+</html>

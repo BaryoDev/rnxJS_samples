@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Commerce Shop - rnxJS Demo</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+</head>
+
+<body>
+    <Container class="py-4">
+        <!-- Header -->
+        <div class="glass p-3 mb-4">
+            <Row class="align-items-center">
+                <Column class="col-md-4">
+                    <h1 class="h4 mb-0 fw-bold">
+                        <i class="bi bi-shop text-primary"></i> Tech Store
+                    </h1>
+                </Column>
+                <Column class="col-md-4">
+                    <Input placeholder="Search products..." data-bind="searchQuery" />
+                </Column>
+                <Column class="col-md-4 text-end">
+                    <Button variant="outline-primary" onclick="window.location.href='index.html'">
+                        <i class="bi bi-house-fill"></i> Home
+                    </Button>
+                    <Button variant="primary" onclick="toggleCart()">
+                        <i class="bi bi-cart-fill"></i> Cart (<span data-bind="cartCount"></span>)
+                    </Button>
+                </Column>
+            </Row>
+        </div>
+
+        <!-- Filters -->
+        <div class="glass p-3 mb-4">
+            <Row class="align-items-center">
+                <Column class="col-md-3">
+                    <label class="form-label small fw-bold">Category</label>
+                    <Select data-bind="selectedCategory">
+                        <option value="all">All Categories</option>
+                        <option value="laptops">Laptops</option>
+                        <option value="phones">Phones</option>
+                        <option value="accessories">Accessories</option>
+                    </Select>
+                </Column>
+                <Column class="col-md-3">
+                    <label class="form-label small fw-bold">Price Range</label>
+                    <Select data-bind="priceRange">
+                        <option value="all">All Prices</option>
+                        <option value="0-500">Under $500</option>
+                        <option value="500-1000">$500 - $1000</option>
+                        <option value="1000+">$1000+</option>
+                    </Select>
+                </Column>
+                <Column class="col-md-3">
+                    <label class="form-label small fw-bold">Sort By</label>
+                    <Select data-bind="sortBy">
+                        <option value="name">Name</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                    </Select>
+                </Column>
+                <Column class="col-md-3">
+                    <label class="form-label small fw-bold">&nbsp;</label>
+                    <Button variant="outline-secondary" class="w-100" onclick="resetFilters()">
+                        <i class="bi bi-arrow-counterclockwise"></i> Reset
+                    </Button>
+                </Column>
+            </Row>
+        </div>
+
+        <!-- Products Grid -->
+        <div id="products-grid" class="row g-4 mb-4"></div>
+
+        <!-- Cart Sidebar (Hidden by default) -->
+        <div id="cart-sidebar" class="position-fixed top-0 end-0 h-100 bg-white shadow-lg"
+            style="width: 400px; transform: translateX(100%); transition: transform 0.3s; z-index: 1050; display: none;">
+            <div class="p-4 h-100 d-flex flex-column">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="h5 fw-bold mb-0">Shopping Cart</h3>
+                    <button class="btn-close" onclick="toggleCart()"></button>
+                </div>
+
+                <div id="cart-items" class="flex-grow-1 overflow-auto mb-4"></div>
+
+                <div class="border-top pt-3">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="fw-bold">Subtotal:</span>
+                        <span class="fw-bold">$<span data-bind="cartTotal"></span></span>
+                    </div>
+                    <Button variant="primary" class="w-100" onclick="checkout()">
+                        <i class="bi bi-credit-card-fill"></i> Checkout
+                    </Button>
+                </div>
+            </div>
+        </div>
+    </Container>
+
+    <script src="https://cdn.jsdelivr.net/npm/@arnelirobles/rnxjs/dist/rnx.global.js"></script>
+    <script>
+        const { createReactiveState, autoRegisterComponents, loadComponents } = rnx;
+
+        const products = [
+            { id: 1, name: 'MacBook Pro 16"', category: 'laptops', price: 2499, image: 'https://placehold.co/300x200/667eea/ffffff?text=MacBook+Pro', rating: 5, inStock: true },
+            { id: 2, name: 'iPhone 15 Pro', category: 'phones', price: 999, image: 'https://placehold.co/300x200/764ba2/ffffff?text=iPhone+15', rating: 5, inStock: true },
+            { id: 3, name: 'AirPods Pro', category: 'accessories', price: 249, image: 'https://placehold.co/300x200/f093fb/ffffff?text=AirPods', rating: 4, inStock: true },
+            { id: 4, name: 'Dell XPS 15', category: 'laptops', price: 1799, image: 'https://placehold.co/300x200/4facfe/ffffff?text=Dell+XPS', rating: 4, inStock: true },
+            { id: 5, name: 'Samsung Galaxy S24', category: 'phones', price: 899, image: 'https://placehold.co/300x200/00f2fe/ffffff?text=Galaxy+S24', rating: 4, inStock: false },
+            { id: 6, name: 'Magic Mouse', category: 'accessories', price: 79, image: 'https://placehold.co/300x200/43e97b/ffffff?text=Magic+Mouse', rating: 3, inStock: true },
+            { id: 7, name: 'ThinkPad X1', category: 'laptops', price: 1499, image: 'https://placehold.co/300x200/38f9d7/ffffff?text=ThinkPad', rating: 5, inStock: true },
+            { id: 8, name: 'Pixel 8 Pro', category: 'phones', price: 799, image: 'https://placehold.co/300x200/fa709a/ffffff?text=Pixel+8', rating: 4, inStock: true },
+        ];
+
+        const state = createReactiveState({
+            searchQuery: '',
+            selectedCategory: 'all',
+            priceRange: 'all',
+            sortBy: 'name',
+            cart: [],
+            cartCount: 0,
+            cartTotal: 0
+        });
+
+        autoRegisterComponents();
+        loadComponents(document.body, state);
+
+        function renderProducts() {
+            let filtered = products.filter(p => {
+                const matchesSearch = p.name.toLowerCase().includes(state.searchQuery.toLowerCase());
+                const matchesCategory = state.selectedCategory === 'all' || p.category === state.selectedCategory;
+
+                let matchesPrice = true;
+                if (state.priceRange !== 'all') {
+                    if (state.priceRange === '0-500') matchesPrice = p.price < 500;
+                    else if (state.priceRange === '500-1000') matchesPrice = p.price >= 500 && p.price <= 1000;
+                    else if (state.priceRange === '1000+') matchesPrice = p.price > 1000;
+                }
+
+                return matchesSearch && matchesCategory && matchesPrice;
+            });
+
+            // Sort
+            if (state.sortBy === 'price-low') filtered.sort((a, b) => a.price - b.price);
+            else if (state.sortBy === 'price-high') filtered.sort((a, b) => b.price - a.price);
+            else filtered.sort((a, b) => a.name.localeCompare(b.name));
+
+            const grid = document.getElementById('products-grid');
+            grid.innerHTML = filtered.map(p => `
+                <div class="col-md-6 col-lg-3 fade-in">
+                    <div class="card product-card h-100">
+                        ${!p.inStock ? '<span class="product-badge badge bg-danger">Out of Stock</span>' : ''}
+                        <img src="${p.image}" class="card-img-top" alt="${p.name}">
+                        <div class="card-body">
+                            <h5 class="card-title">${p.name}</h5>
+                            <div class="mb-2">
+                                ${'<i class="bi bi-star-fill text-warning"></i>'.repeat(p.rating)}
+                                ${'<i class="bi bi-star text-muted"></i>'.repeat(5 - p.rating)}
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="h5 mb-0 fw-bold text-primary">$${p.price}</span>
+                                <button class="btn btn-sm btn-primary" onclick="addToCart(${p.id})" ${!p.inStock ? 'disabled' : ''}>
+                                    <i class="bi bi-cart-plus-fill"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cart-items');
+            if (state.cart.length === 0) {
+                container.innerHTML = '<div class="text-center text-muted py-5"><i class="bi bi-cart-x fs-1"></i><p>Your cart is empty</p></div>';
+                return;
+            }
+
+            container.innerHTML = state.cart.map(item => `
+                <div class="d-flex gap-3 mb-3 p-2 border rounded">
+                    <img src="${item.image}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;">
+                    <div class="flex-grow-1">
+                        <div class="fw-bold">${item.name}</div>
+                        <div class="text-muted small">$${item.price} × ${item.quantity}</div>
+                    </div>
+                    <div class="text-end">
+                        <div class="fw-bold">$${item.price * item.quantity}</div>
+                        <button class="btn btn-sm btn-outline-danger" onclick="removeFromCart(${item.id})">
+                            <i class="bi bi-trash-fill"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addToCart(id) {
+            const product = products.find(p => p.id === id);
+            const existing = state.cart.find(item => item.id === id);
+
+            if (existing) {
+                existing.quantity++;
+            } else {
+                state.cart.push({ ...product, quantity: 1 });
+            }
+
+            updateCartTotals();
+            renderCart();
+        }
+
+        function removeFromCart(id) {
+            state.cart = state.cart.filter(item => item.id !== id);
+            updateCartTotals();
+            renderCart();
+        }
+
+        function updateCartTotals() {
+            state.cartCount = state.cart.reduce((sum, item) => sum + item.quantity, 0);
+            state.cartTotal = state.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        }
+
+        function toggleCart() {
+            const sidebar = document.getElementById('cart-sidebar');
+            const isVisible = sidebar.style.display === 'block';
+
+            if (isVisible) {
+                sidebar.style.transform = 'translateX(100%)';
+                setTimeout(() => sidebar.style.display = 'none', 300);
+            } else {
+                sidebar.style.display = 'block';
+                setTimeout(() => sidebar.style.transform = 'translateX(0)', 10);
+            }
+        }
+
+        function resetFilters() {
+            state.searchQuery = '';
+            state.selectedCategory = 'all';
+            state.priceRange = 'all';
+            state.sortBy = 'name';
+        }
+
+        function checkout() {
+            alert(`Checkout total: $${state.cartTotal}\n\nThank you for your order!`);
+            state.cart = [];
+            updateCartTotals();
+            renderCart();
+            toggleCart();
+        }
+
+        state.subscribe('searchQuery', renderProducts);
+        state.subscribe('selectedCategory', renderProducts);
+        state.subscribe('priceRange', renderProducts);
+        state.subscribe('sortBy', renderProducts);
+
+        renderProducts();
+        renderCart();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Table - rnxJS Demo</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+</head>
+
+<body>
+    <Container class="py-4">
+        <div class="glass p-3 mb-4 d-flex justify-content-between align-items-center">
+            <h1 class="h4 mb-0 fw-bold">
+                <i class="bi bi-table text-primary"></i> Data Table Demo
+            </h1>
+            <Button variant="outline-primary" onclick="window.location.href='index.html'">
+                <i class="bi bi-house-fill"></i> Home
+            </Button>
+        </div>
+
+        <div class="glass">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2 class="h5 fw-bold mb-0">Employee Directory</h2>
+                    <div class="d-flex gap-2">
+                        <Input placeholder="Search..." data-bind="searchQuery" style="width: 250px;" />
+                        <Select data-bind="filterDept" style="width: 150px;">
+                            <option value="">All Departments</option>
+                            <option value="Engineering">Engineering</option>
+                            <option value="Sales">Sales</option>
+                            <option value="Marketing">Marketing</option>
+                            <option value="HR">HR</option>
+                        </Select>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th onclick="sortBy('id')" style="cursor: pointer;">
+                                    ID <i class="bi bi-arrow-down-up"></i>
+                                </th>
+                                <th onclick="sortBy('name')" style="cursor: pointer;">
+                                    Name <i class="bi bi-arrow-down-up"></i>
+                                </th>
+                                <th onclick="sortBy('email')" style="cursor: pointer;">
+                                    Email <i class="bi bi-arrow-down-up"></i>
+                                </th>
+                                <th onclick="sortBy('department')" style="cursor: pointer;">
+                                    Department <i class="bi bi-arrow-down-up"></i>
+                                </th>
+                                <th onclick="sortBy('salary')" style="cursor: pointer;">
+                                    Salary <i class="bi bi-arrow-down-up"></i>
+                                </th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body"></tbody>
+                    </table>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <div class="text-muted small">
+                        Showing <span data-bind="displayedCount"></span> of <span data-bind="totalCount"></span>
+                        employees
+                    </div>
+                    <nav>
+                        <ul class="pagination pagination-sm mb-0" id="pagination"></ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </Container>
+
+    <script src="https://cdn.jsdelivr.net/npm/@arnelirobles/rnxjs/dist/rnx.global.js"></script>
+    <script>
+        const { createReactiveState, autoRegisterComponents, loadComponents } = rnx;
+
+        const employees = Array.from({ length: 50 }, (_, i) => ({
+            id: i + 1,
+            name: ['Alice Johnson', 'Bob Smith', 'Charlie Brown', 'Diana Prince', 'Eve Wilson'][i % 5] + ` ${Math.floor(i / 5) + 1}`,
+            email: `employee${i + 1}@company.com`,
+            department: ['Engineering', 'Sales', 'Marketing', 'HR'][i % 4],
+            salary: 50000 + (i * 1000),
+            status: i % 3 === 0 ? 'Active' : 'Active'
+        }));
+
+        const state = createReactiveState({
+            searchQuery: '',
+            filterDept: '',
+            sortField: 'id',
+            sortDir: 'asc',
+            currentPage: 1,
+            pageSize: 10,
+            displayedCount: 0,
+            totalCount: employees.length
+        });
+
+        autoRegisterComponents();
+        loadComponents(document.body, state);
+
+        function renderTable() {
+            let filtered = employees.filter(emp => {
+                const matchesSearch = emp.name.toLowerCase().includes(state.searchQuery.toLowerCase()) ||
+                    emp.email.toLowerCase().includes(state.searchQuery.toLowerCase());
+                const matchesDept = !state.filterDept || emp.department === state.filterDept;
+                return matchesSearch && matchesDept;
+            });
+
+            filtered.sort((a, b) => {
+                const aVal = a[state.sortField];
+                const bVal = b[state.sortField];
+                const dir = state.sortDir === 'asc' ? 1 : -1;
+                return aVal > bVal ? dir : -dir;
+            });
+
+            state.totalCount = filtered.length;
+            const start = (state.currentPage - 1) * state.pageSize;
+            const paged = filtered.slice(start, start + state.pageSize);
+            state.displayedCount = paged.length;
+
+            const tbody = document.getElementById('table-body');
+            tbody.innerHTML = paged.map(emp => `
+                <tr class="fade-in">
+                    <td>${emp.id}</td>
+                    <td><strong>${emp.name}</strong></td>
+                    <td>${emp.email}</td>
+                    <td><span class="badge bg-secondary">${emp.department}</span></td>
+                    <td>$${emp.salary.toLocaleString()}</td>
+                    <td><span class="badge bg-success">${emp.status}</span></td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary" onclick="alert('Edit ${emp.name}')">
+                            <i class="bi bi-pencil-fill"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="alert('Delete ${emp.name}')">
+                            <i class="bi bi-trash-fill"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+
+            renderPagination(filtered.length);
+        }
+
+        function renderPagination(total) {
+            const pages = Math.ceil(total / state.pageSize);
+            const pagination = document.getElementById('pagination');
+
+            let html = '';
+            for (let i = 1; i <= pages; i++) {
+                html += `<li class="page-item ${i === state.currentPage ? 'active' : ''}">
+                    <a class="page-link" href="#" onclick="changePage(${i}); return false;">${i}</a>
+                </li>`;
+            }
+            pagination.innerHTML = html;
+        }
+
+        function sortBy(field) {
+            if (state.sortField === field) {
+                state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc';
+            } else {
+                state.sortField = field;
+                state.sortDir = 'asc';
+            }
+            renderTable();
+        }
+
+        function changePage(page) {
+            state.currentPage = page;
+            renderTable();
+        }
+
+        state.subscribe('searchQuery', () => { state.currentPage = 1; renderTable(); });
+        state.subscribe('filterDept', () => { state.currentPage = 1; renderTable(); });
+
+        renderTable();
+    </script>
+</body>
+
+</html>

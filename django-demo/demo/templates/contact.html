@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load rnx %}
+
+{% block title %}Contact - rnxJS + Django{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">{{ page_title }}</h2>
+
+{% if success %}
+<div class="alert alert-success">
+    <i class="bi bi-check-circle-fill"></i> {{ message }}
+</div>
+{% else %}
+<form method="post">
+    {% csrf_token %}
+    {% rnx_form form %}
+
+    <div class="mt-3">
+        {% rnx_component 'Button' type='submit' variant='primary' label='Send Message' %}
+    </div>
+</form>
+{% endif %}
+
+<div class="mt-4">
+    <h3 class="h6 fw-bold">How it works:</h3>
+    <ol class="small text-muted">
+        <li>Django form is rendered using
+            <code>{% templatetag openblock %} rnx_form form {% templatetag closeblock %}</code></li>
+        <li>Form fields are automatically converted to rnxJS components</li>
+        <li>Submit button uses
+            <code>{% templatetag openblock %} rnx_component 'Button' ... {% templatetag closeblock %}</code></li>
+        <li>Django handles form validation on the backend</li>
+    </ol>
+</div>
+{% endblock %}

@@ -1,0 +1,105 @@
+<% const tableState={ users: users, columns: columns }; %>
+
+    <%- rnx.state(tableState, 'tableState' ) %>
+
+        <h2 class="mb-4">Components Showcase</h2>
+
+        <!-- Buttons -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h3 class="h5 fw-bold mb-3">Buttons</h3>
+                <div class="d-flex gap-2 flex-wrap">
+                    <%- rnx.component('Button', { variant: 'primary' , label: 'Primary' }) %>
+                        <%- rnx.component('Button', { variant: 'secondary' , label: 'Secondary' }) %>
+                            <%- rnx.component('Button', { variant: 'success' , label: 'Success' }) %>
+                                <%- rnx.component('Button', { variant: 'danger' , label: 'Danger' }) %>
+                                    <%- rnx.component('Button', { variant: 'warning' , label: 'Warning' }) %>
+                                        <%- rnx.component('Button', { variant: 'info' , label: 'Info' }) %>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Inputs -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h3 class="h5 fw-bold mb-3">Form Inputs</h3>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <%- rnx.component('Input', { placeholder: 'Enter your name' , label: 'Name' }) %>
+                    </div>
+                    <div class="col-md-6">
+                        <%- rnx.component('Input', { type: 'email' , placeholder: 'your@email.com' , label: 'Email' })
+                            %>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Table -->
+        <div class="card">
+            <div class="card-body">
+                <h3 class="h5 fw-bold mb-3">Data Table</h3>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-primary">
+                            <tr>
+                                <% columns.forEach(col=> { %>
+                                    <th>
+                                        <%= col.label %>
+                                    </th>
+                                    <% }); %>
+                                        <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% users.forEach(user=> { %>
+                                <tr>
+                                    <td>
+                                        <%= user.id %>
+                                    </td>
+                                    <td><strong>
+                                            <%= user.name %>
+                                        </strong></td>
+                                    <td>
+                                        <%= user.email %>
+                                    </td>
+                                    <td><span class="badge bg-secondary">
+                                            <%= user.role %>
+                                        </span></td>
+                                    <td>
+                                        <span
+                                            class="badge <%= user.status === 'Active' ? 'bg-success' : 'bg-warning' %>">
+                                            <%= user.status %>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary"
+                                            onclick="window.rnx.toast.info('Edit user: <%= user.name %>')">
+                                            <i class="bi bi-pencil-fill"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger"
+                                            onclick="window.rnx.toast.warning('Delete user: <%= user.name %>')">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <h3 class="h6 fw-bold">How it works:</h3>
+            <ol class="small text-muted">
+                <li>Express middleware adds <code>rnx</code> helpers to <code>res.locals</code></li>
+                <li>Use <code>&lt;%- rnx.component('ComponentName', { props }) %&gt;</code> to render components</li>
+                <li>Use <code>&lt;%- rnx.state(data, 'varName') %&gt;</code> to create reactive state</li>
+                <li>Use <code>&lt;%- rnx.plugin('pluginName', { options }) %&gt;</code> to initialize plugins</li>
+            </ol>
+        </div>
+
+        <script>
+            console.log('Table state:', window.tableState);
+        </script>
