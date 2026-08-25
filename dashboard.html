@@ -29,7 +29,7 @@
                 </h1>
             </div>
             <div class="d-flex gap-2">
-                <Button variant="outline-primary" onclick="window.location.href='index.html'">
+                <Button variant="outlined" onclick="window.location.href='index.html'">
                     <i class="bi bi-house-fill"></i> Home
                 </Button>
                 <Button variant="primary" onclick="refreshData()">
@@ -43,7 +43,7 @@
             <Column class="col-md-3">
                 <div class="stat-card">
                     <div class="stat-label">Total Users</div>
-                    <div class="stat-value" data-bind="stats.users"></div>
+                    <div class="stat-value" data-bind="display.users"></div>
                     <div class="text-success small">
                         <i class="bi bi-arrow-up-short"></i> +12% from last month
                     </div>
@@ -52,7 +52,7 @@
             <Column class="col-md-3">
                 <div class="stat-card">
                     <div class="stat-label">Revenue</div>
-                    <div class="stat-value">$<span data-bind="stats.revenue"></span></div>
+                    <div class="stat-value">$<span data-bind="display.revenue"></span></div>
                     <div class="text-success small">
                         <i class="bi bi-arrow-up-short"></i> +8% from last month
                     </div>
@@ -61,7 +61,7 @@
             <Column class="col-md-3">
                 <div class="stat-card">
                     <div class="stat-label">Active Sessions</div>
-                    <div class="stat-value" data-bind="stats.sessions"></div>
+                    <div class="stat-value" data-bind="display.sessions"></div>
                     <div class="text-warning small">
                         <i class="bi bi-dash"></i> No change
                     </div>
@@ -84,7 +84,7 @@
                 <Card class="glass h-100">
                     <div class="card-body">
                         <h2 class="h5 fw-bold mb-3">
-                            <i class="bi bi-activity text-primary"></i> Recent Activity
+                            Recent Activity
                         </h2>
                         <div id="activity-list"></div>
                     </div>
@@ -94,19 +94,19 @@
                 <Card class="glass h-100">
                     <div class="card-body">
                         <h2 class="h5 fw-bold mb-3">
-                            <i class="bi bi-lightning-charge-fill text-warning"></i> Quick Actions
+                            Quick Actions
                         </h2>
                         <div class="d-grid gap-2">
                             <Button variant="primary" onclick="addUser()">
                                 <i class="bi bi-person-plus-fill"></i> Add User
                             </Button>
-                            <Button variant="success" onclick="generateReport()">
+                            <Button variant="outlined" onclick="generateReport()">
                                 <i class="bi bi-file-earmark-bar-graph-fill"></i> Generate Report
                             </Button>
-                            <Button variant="info" onclick="exportData()">
+                            <Button variant="outlined" onclick="exportData()">
                                 <i class="bi bi-download"></i> Export Data
                             </Button>
-                            <Button variant="warning" onclick="viewSettings()">
+                            <Button variant="outlined" onclick="viewSettings()">
                                 <i class="bi bi-gear-fill"></i> Settings
                             </Button>
                         </div>
@@ -120,11 +120,11 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h2 class="h5 fw-bold mb-0">
-                        <i class="bi bi-people-fill text-primary"></i> User Management
+                        User Management
                     </h2>
                     <div class="d-flex gap-2">
                         <Input placeholder="Search users..." data-bind="searchQuery" style="width: 250px;" />
-                        <Button variant="outline-secondary" onclick="state.searchQuery = ''">
+                        <Button variant="outlined" onclick="state.searchQuery = ''">
                             <i class="bi bi-x-lg"></i>
                         </Button>
                     </div>
@@ -189,6 +189,13 @@
                 revenue: 45230,
                 sessions: 1253,
                 conversion: 3.8
+            },
+            // What the cards display. Raw numbers stay above for the maths;
+            // a dashboard that prints 45230 instead of 45,230 reads as unfinished.
+            display: {
+                users: '2,847',
+                revenue: '45,230',
+                sessions: '1,253'
             },
             searchQuery: '',
             users: users,
@@ -265,7 +272,10 @@
             state.stats.revenue += Math.floor(Math.random() * 1000);
             state.stats.sessions += Math.floor(Math.random() * 20) - 10;
 
-            alert('Data refreshed successfully!');
+            const n = (v) => v.toLocaleString('en-US');
+            state.display.users = n(state.stats.users);
+            state.display.revenue = n(state.stats.revenue);
+            state.display.sessions = n(state.stats.sessions);
         }
 
         // Action handlers

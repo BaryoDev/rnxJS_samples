@@ -242,3 +242,183 @@ code, pre, .mono, .font-monospace {
   }
   .hover-lift:hover { transform: none; }
 }
+
+/* ============================================================
+   Discipline pass.
+   Colour carries meaning or it does not appear. Bootstrap's
+   semantic variants were being used decoratively, which is what
+   made the pages read as unfinished.
+   ============================================================ */
+
+/* ---- one accent, and grey for everything else ---- */
+
+.btn-success, .btn-info, .btn-warning, .btn-secondary {
+  --bs-btn-bg: var(--panel);
+  --bs-btn-border-color: var(--rule);
+  --bs-btn-color: var(--ink);
+  --bs-btn-hover-bg: #f6f8f9;
+  --bs-btn-hover-border-color: var(--rule-strong, #c3ccd4);
+  --bs-btn-hover-color: var(--ink);
+  --bs-btn-active-bg: #eef1f4;
+  --bs-btn-active-border-color: var(--accent);
+  --bs-btn-active-color: var(--ink);
+}
+
+/* Destructive stays red. That is information. */
+.btn-danger, .btn-outline-danger {
+  --bs-btn-bg: var(--panel);
+  --bs-btn-border-color: #e0c4bf;
+  --bs-btn-color: var(--danger);
+  --bs-btn-hover-bg: var(--danger);
+  --bs-btn-hover-border-color: var(--danger);
+  --bs-btn-hover-color: #fff;
+}
+
+/* Bootstrap's link blue was leaking into prices and headings. */
+.text-primary { color: var(--ink) !important; }
+.text-info, .text-secondary { color: var(--muted) !important; }
+.text-warning { color: var(--warning) !important; }
+.text-success { color: var(--success) !important; }
+.text-danger  { color: var(--danger)  !important; }
+
+a:not(.btn):not(.nav-link):not(.demo) { color: var(--accent); text-underline-offset: 2px; }
+
+/* ---- numbers and labels ---- */
+
+.stat-card {
+  padding: 1.05rem 1.15rem 1.15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+/* the label is the small part, the number is the point */
+.stat-card > :first-child,
+.stat-card .stat-label,
+.stat-card .text-muted:first-child {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--faint);
+  order: -1;
+}
+
+.stat-card .stat-value,
+.stat-card h2, .stat-card h3, .stat-card .h2, .stat-card .h4, .stat-card .display-6 {
+  font-family: Archivo, sans-serif;
+  font-size: clamp(1.6rem, 2.6vw, 2.05rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  margin: 0;
+  color: var(--ink);
+}
+
+.stat-card small, .stat-card .small { font-size: 0.78rem; color: var(--muted); }
+
+td, th, .tabular { font-variant-numeric: tabular-nums; }
+
+/* ---- cards in the same row end at the same line ----
+   Scoped to cards on purpose: an earlier blanket rule on every column
+   turned the navbar into a stacked, centred column. */
+
+.row > .col > .card,
+.row > .col > .glass,
+.row > .col > .product-card,
+.row > [class*="col-"] > .card,
+.row > [class*="col-"] > .glass,
+.row > [class*="col-"] > .product-card { height: 100%; }
+
+/* rnxJS <Column> renders class="col", with no hyphen. An earlier selector
+   used [class*="col-"], which never matched, so nothing lined up.
+
+   Only cards laid out in a grid. `.glass` is also used for page headers that
+   carry `d-flex` for a horizontal bar, and forcing a column direction on those
+   stacked the title above the buttons. */
+.row > .col > .card,
+.row > .col > .glass,
+.row > [class*="col-"] > .card,
+.row > [class*="col-"] > .glass,
+.product-card { display: flex; flex-direction: column; }
+
+.row > .col > .card > .card-body,
+.row > .col > .glass > .card-body { flex: 1 1 auto; }
+
+/* ---- product tiles: a considered placeholder, not a fake photo ---- */
+
+.product-card img,
+img[src*="placehold"] {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: var(--ground);
+  border-bottom: 1px solid var(--rule);
+  /* the colour block with a huge product name reads as unfinished */
+  filter: grayscale(1) contrast(0.9) opacity(0.55);
+}
+
+.product-badge {
+  position: absolute;
+  top: 0.6rem;
+  left: 0.6rem;
+  z-index: 2;
+}
+
+.product-card { position: relative; overflow: hidden; }
+
+/* ---- rating stars: one weight, not Bootstrap yellow ---- */
+
+.bi-star-fill, .bi-star-half { color: var(--ink); }
+.bi-star { color: var(--rule-strong, #c3ccd4); }
+
+/* ---- table actions ---- */
+
+.table .btn-sm, .table .btn { --bs-btn-padding-y: 0.2rem; --bs-btn-padding-x: 0.45rem; font-size: 0.8rem; }
+.table td { vertical-align: middle; }
+
+/* ---- section headings ---- */
+
+.card-title, .card-header h5, .card-header h4 {
+  font-family: Archivo, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* ---- product tiles ----
+   A coloured rectangle with the product name set in 40px is what a
+   placeholder looks like. A quiet monogram reads as a deliberate
+   no-image state, and it costs no external request. */
+
+.product-thumb {
+  aspect-ratio: 4 / 3;
+  display: grid;
+  place-items: center;
+  background:
+    repeating-linear-gradient(45deg, #f4f6f8 0 10px, #eef1f4 10px 20px);
+  border-bottom: 1px solid var(--rule);
+  color: var(--faint);
+}
+
+.product-thumb > span {
+  font-family: Archivo, sans-serif;
+  font-size: 2.1rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  opacity: 0.55;
+}
+
+.product-thumb-sm {
+  width: 56px;
+  height: 56px;
+  aspect-ratio: auto;
+  border: 1px solid var(--rule);
+  border-radius: 7px;
+  flex: none;
+}
+
+.product-thumb-sm > span { font-size: 1.05rem; }

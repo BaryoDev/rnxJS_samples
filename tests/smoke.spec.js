@@ -36,10 +36,19 @@ const PAGES = [
 function watch(page) {
   const problems = [];
   page.on('console', (m) => {
-    if (m.type() !== 'error') return;
+    const text = m.text();
     // The favicon is served by the host, not this site.
-    if (/favicon/i.test(m.text())) return;
-    problems.push(`console: ${m.text()}`);
+    if (/favicon/i.test(text)) return;
+
+    if (m.type() === 'error') {
+      problems.push(`console: ${text}`);
+      return;
+    }
+    // rnxJS warns about an unknown variant or a missing component rather than
+    // throwing. Ten buttons shipped rendering bare because nothing read these.
+    if (m.type() === 'warning' && /\[rnxJS\]/.test(text)) {
+      problems.push(`rnxJS warning: ${text}`);
+    }
   });
   page.on('pageerror', (e) => problems.push(`uncaught: ${e.message}`));
   page.on('requestfailed', (r) => {

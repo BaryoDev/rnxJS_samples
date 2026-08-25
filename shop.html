@@ -26,7 +26,7 @@
                     <Input placeholder="Search products..." data-bind="searchQuery" />
                 </Column>
                 <Column class="col-md-4 text-end">
-                    <Button variant="outline-primary" onclick="window.location.href='index.html'">
+                    <Button variant="outlined" onclick="window.location.href='index.html'">
                         <i class="bi bi-house-fill"></i> Home
                     </Button>
                     <Button variant="primary" onclick="toggleCart()">
@@ -41,33 +41,19 @@
             <Row class="align-items-center">
                 <Column class="col-md-3">
                     <label class="form-label small fw-bold">Category</label>
-                    <Select data-bind="selectedCategory">
-                        <option value="all">All Categories</option>
-                        <option value="laptops">Laptops</option>
-                        <option value="phones">Phones</option>
-                        <option value="accessories">Accessories</option>
-                    </Select>
+                    <Select data-bind="selectedCategory" options='[{"value": "all", "label": "All Categories"}, {"value": "laptops", "label": "Laptops"}, {"value": "phones", "label": "Phones"}, {"value": "accessories", "label": "Accessories"}]'></Select>
                 </Column>
                 <Column class="col-md-3">
                     <label class="form-label small fw-bold">Price Range</label>
-                    <Select data-bind="priceRange">
-                        <option value="all">All Prices</option>
-                        <option value="0-500">Under $500</option>
-                        <option value="500-1000">$500 - $1000</option>
-                        <option value="1000+">$1000+</option>
-                    </Select>
+                    <Select data-bind="priceRange" options='[{"value": "all", "label": "All Prices"}, {"value": "0-500", "label": "Under $500"}, {"value": "500-1000", "label": "$500 - $1000"}, {"value": "1000+", "label": "$1000+"}]'></Select>
                 </Column>
                 <Column class="col-md-3">
                     <label class="form-label small fw-bold">Sort By</label>
-                    <Select data-bind="sortBy">
-                        <option value="name">Name</option>
-                        <option value="price-low">Price: Low to High</option>
-                        <option value="price-high">Price: High to Low</option>
-                    </Select>
+                    <Select data-bind="sortBy" options='[{"value": "name", "label": "Name"}, {"value": "price-low", "label": "Price: Low to High"}, {"value": "price-high", "label": "Price: High to Low"}]'></Select>
                 </Column>
                 <Column class="col-md-3">
                     <label class="form-label small fw-bold">&nbsp;</label>
-                    <Button variant="outline-secondary" class="w-100" onclick="resetFilters()">
+                    <Button variant="outlined" class="w-100" onclick="resetFilters()">
                         <i class="bi bi-arrow-counterclockwise"></i> Reset
                     </Button>
                 </Column>
@@ -154,7 +140,7 @@
                 <div class="col-md-6 col-lg-3 fade-in">
                     <div class="card product-card h-100">
                         ${!p.inStock ? '<span class="product-badge badge bg-danger">Out of Stock</span>' : ''}
-                        <img src="${p.image}" class="card-img-top" alt="${p.name}">
+                        <div class="product-thumb" aria-hidden="true"><span>${p.name.trim()[0]}</span></div>
                         <div class="card-body">
                             <h5 class="card-title">${p.name}</h5>
                             <div class="mb-2">
@@ -182,7 +168,7 @@
 
             container.innerHTML = state.cart.map(item => `
                 <div class="d-flex gap-3 mb-3 p-2 border rounded">
-                    <img src="${item.image}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;">
+                    <div class="product-thumb product-thumb-sm" aria-hidden="true"><span>${item.name.trim()[0]}</span></div>
                     <div class="flex-grow-1">
                         <div class="fw-bold">${item.name}</div>
                         <div class="text-muted small">$${item.price} × ${item.quantity}</div>
