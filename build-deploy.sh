@@ -17,17 +17,8 @@ PAGES=(index.html index.css styles.css chat.html dashboard.html datatable.html
        forms.html settings.html shop.html tasks.html LICENSE README.md)
 DIRS=(django-demo express-demo)
 
-stamp() {  # stamp() <file> <version>  -> records the build on <html>
-  python3 - "$1" "$2" <<'PY'
-import re, sys
-path, version = sys.argv[1], sys.argv[2]
-s = open(path).read()
-s = re.sub(r'<html\b[^>]*?>',
-           lambda m: re.sub(r'\s+data-rnx-version="[^"]*"', '', m.group(0))[:-1]
-                     + f' data-rnx-version="{version}">',
-           s, count=1)
-open(path, 'w').write(s)
-PY
+stamp() {  # stamp() <dir> <version>
+  python3 "$here/stamp.py" "$1" "$2"
 }
 
 copy_pages() {  # copy_pages <target dir>
@@ -44,7 +35,7 @@ echo "released: $released"
 copy_pages "$dist"
 curl -fsSL "https://cdn.jsdelivr.net/npm/@arnelirobles/rnxjs@${released}/dist/rnx.global.js" \
   -o "$dist/rnx.global.js"
-stamp "$dist/index.html" "$released"
+stamp "$dist" "$released"
 
 # ---- main channel -----------------------------------------------------------
 # Built from source rather than downloaded, because the point of this channel is
@@ -55,7 +46,7 @@ echo "main: $sha"
 ( cd "$rnxjs" && npm run build >/dev/null )
 copy_pages "$dist/next"
 cp "$rnxjs/dist/rnx.global.js" "$dist/next/rnx.global.js"
-stamp "$dist/next/index.html" "main@$sha"
+stamp "$dist/next" "main@$sha"
 
 echo
 echo "dist/       $(du -sh "$dist" | cut -f1)   rnx.global.js $(wc -c < "$dist/rnx.global.js") bytes"
