@@ -24,12 +24,12 @@ const CHANNELS = [
 const PAGES = [
   ['index.html', 'a.demo', 9],
   ['dashboard.html', '.metric', 4],
-  ['datatable.html', 'table', 1],
-  ['forms.html', 'form, .form-control', 1],
-  ['shop.html', '.product-card, .card', 1],
-  ['tasks.html', '.task-item, .card', 1],
-  ['chat.html', '.form-control', 1],
-  ['settings.html', '.form-control', 5],
+  ['datatable.html', '.metric', 4],
+  ['forms.html', '.field', 8],
+  ['shop.html', '.part', 8],
+  ['tasks.html', '.task', 8],
+  ['chat.html', '.msg', 5],
+  ['settings.html', '.field', 4],
 ];
 
 /** Console errors, and failed requests, collected for one page load. */

@@ -4,162 +4,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task Manager - rnxJS Demo</title>
+    <title>Task board - rnxJS</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="styles.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700&family=JetBrains+Mono:wght@400;500&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="demo.css">
 </head>
 
 <body>
-    <Container class="py-4">
-        <div class="glass p-3 mb-4 d-flex justify-content-between align-items-center">
-            <h1 class="h4 mb-0 fw-bold">
-                <i class="bi bi-check2-square text-primary"></i> Task Manager
-            </h1>
-            <Button variant="outlined" onclick="window.location.href='index.html'">
-                <i class="bi bi-house-fill"></i> Home
-            </Button>
+
+    <div class="topbar">
+        <div class="shell topbar-in mono">
+            <a class="wordmark" href="./" style="color:inherit;text-decoration:none">rnxJS</a>
+            <span class="sep">/</span>
+            <span>task board</span>
+            <span class="spacer"></span>
+            <a class="chan" href="./"><i class="bi bi-arrow-left"></i>&nbsp;All demos</a>
         </div>
+    </div>
 
-        <Row class="g-4 mb-4">
-            <Column class="col-md-4">
-                <div class="stat-card">
-                    <div class="stat-label">Total Tasks</div>
-                    <div class="stat-value" data-bind="stats.total"></div>
-                </div>
-            </Column>
-            <Column class="col-md-4">
-                <div class="stat-card">
-                    <div class="stat-label">In Progress</div>
-                    <div class="stat-value text-warning" data-bind="stats.inProgress"></div>
-                </div>
-            </Column>
-            <Column class="col-md-4">
-                <div class="stat-card">
-                    <div class="stat-label">Completed</div>
-                    <div class="stat-value text-success" data-bind="stats.completed"></div>
-                </div>
-            </Column>
-        </Row>
+    <div class="shell">
 
-        <div class="glass">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h2 class="h5 fw-bold mb-0">My Tasks</h2>
-                    <div class="d-flex gap-2">
-                        <button class="btn btn-sm ${state.filter === 'all' ? 'btn-primary' : 'btn-outline-primary'}"
-                            onclick="filterTasks('all')">All</button>
-                        <button class="btn btn-sm ${state.filter === 'todo' ? 'btn-primary' : 'btn-outline-primary'}"
-                            onclick="filterTasks('todo')">To Do</button>
-                        <button
-                            class="btn btn-sm ${state.filter === 'inprogress' ? 'btn-primary' : 'btn-outline-primary'}"
-                            onclick="filterTasks('inprogress')">In Progress</button>
-                        <button class="btn btn-sm ${state.filter === 'done' ? 'btn-primary' : 'btn-outline-primary'}"
-                            onclick="filterTasks('done')">Done</button>
-                    </div>
-                </div>
-
-                <div id="tasks-list"></div>
-
-                <div class="mt-3">
-                    <Input placeholder="Add a new task..." data-bind="newTask"
-                        onkeypress="if(event.key==='Enter') addTask()" />
-                </div>
+        <header class="page-head">
+            <div class="titles">
+                <h1>Release checklist</h1>
+                <p class="sub">
+                    Filtering and completion held in reactive state. Tick something and
+                    the counts, the filter and the list all follow.
+                </p>
             </div>
-        </div>
+            <div class="page-actions" data-ref="actions"></div>
+        </header>
 
-        <button class="btn btn-primary rounded-circle position-fixed bottom-0 end-0 m-4"
-            style="width: 60px; height: 60px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"
-            onclick="document.querySelector('[data-bind=newTask]').focus()">
-            <i class="bi bi-plus-lg fs-4"></i>
-        </button>
-    </Container>
+        <section class="grid-metrics">
+            <div class="metric"><span class="k">Open</span><span class="v" data-ref="mOpen">0</span><span class="d">not started or in progress</span></div>
+            <div class="metric"><span class="k">Done</span><span class="v" data-ref="mDone">0</span><span class="d up" data-ref="mPct"></span></div>
+            <div class="metric"><span class="k">Blocked</span><span class="v" data-ref="mBlocked">0</span><span class="d down">waiting on someone else</span></div>
+            <div class="metric"><span class="k">Owners</span><span class="v" data-ref="mOwners">0</span><span class="d">across the checklist</span></div>
+        </section>
+
+        <section class="panel" style="margin-top:0.85rem">
+            <div class="panel-head">
+                <h2>Checklist</h2>
+                <div class="seg" data-ref="filters"></div>
+            </div>
+            <div class="panel-body" data-ref="list"></div>
+        </section>
+
+    </div>
+
+    <footer style="margin-top:2.5rem">
+        <div class="shell" style="display:flex;gap:1.25rem;flex-wrap:wrap;align-items:center;">
+            <span class="mono" data-ref="footVersion">rnxJS</span>
+            <a href="./">All demos</a>
+            <a href="https://github.com/BaryoDev/rnxJS_samples">Source</a>
+            <span style="margin-left:auto" class="mono">MPL-2.0</span>
+        </div>
+    </footer>
 
     <script src="./rnx.global.js"></script>
     <script>
-        const { createReactiveState, autoRegisterComponents, loadComponents } = rnx;
+        const { Button, createReactiveState } = rnx;
+        const $ = (ref) => document.querySelector(`[data-ref="${ref}"]`);
 
-        const state = createReactiveState({
-            newTask: '',
-            filter: 'all',
-            tasks: [
-                { id: 1, title: 'Design new landing page', status: 'done', priority: 'high' },
-                { id: 2, title: 'Fix login bug', status: 'inprogress', priority: 'high' },
-                { id: 3, title: 'Write documentation', status: 'todo', priority: 'medium' },
-                { id: 4, title: 'Code review for PR #123', status: 'todo', priority: 'low' },
-                { id: 5, title: 'Update dependencies', status: 'inprogress', priority: 'medium' },
-            ],
-            stats: { total: 5, inProgress: 2, completed: 1 }
+        const tasks = [
+            { id: 1, what: 'Freeze the release branch', owner: 'R. Okafor', tag: 'release', done: true },
+            { id: 2, what: 'Run the full suite on Node 20 and 22', owner: 'CI', tag: 'release', done: true },
+            { id: 3, what: 'Update CHANGELOG for 2.1.0', owner: 'A. Duarte', tag: 'docs', done: true },
+            { id: 4, what: 'Confirm the breaking change is called out', owner: 'A. Duarte', tag: 'docs', done: false },
+            { id: 5, what: 'Rebuild the playground next channel', owner: 'M. Lindqvist', tag: 'release', done: false },
+            { id: 6, what: 'Wait on legal sign-off for the licence note', owner: 'Legal', tag: 'blocked', done: false },
+            { id: 7, what: 'Tag and publish to npm', owner: 'R. Okafor', tag: 'release', done: false },
+            { id: 8, what: 'Post the release note to the tracker', owner: 'M. Lindqvist', tag: 'docs', done: false },
+        ];
+
+        const state = createReactiveState({ filter: 'all' });
+        const FILTERS = [['all', 'All'], ['open', 'Open'], ['done', 'Done'], ['blocked', 'Blocked']];
+
+        function visible() {
+            if (state.filter === 'open') return tasks.filter(t => !t.done && t.tag !== 'blocked');
+            if (state.filter === 'done') return tasks.filter(t => t.done);
+            if (state.filter === 'blocked') return tasks.filter(t => t.tag === 'blocked');
+            return tasks;
+        }
+
+        function render() {
+            const done = tasks.filter(t => t.done).length;
+            const blocked = tasks.filter(t => t.tag === 'blocked').length;
+            $('mOpen').textContent = tasks.length - done;
+            $('mDone').textContent = done;
+            $('mPct').textContent = Math.round((done / tasks.length) * 100) + '% complete';
+            $('mBlocked').textContent = blocked;
+            $('mOwners').textContent = new Set(tasks.map(t => t.owner)).size;
+
+            $('filters').innerHTML = FILTERS.map(([k, label]) =>
+                `<a role="button" tabindex="0" data-filter="${k}" aria-current="${state.filter === k}">${label}</a>`).join('');
+
+            const items = visible();
+            $('list').innerHTML = items.length ? items.map(t => `
+                <label class="task ${t.done ? 'is-done' : ''}">
+                    <input type="checkbox" data-id="${t.id}" ${t.done ? 'checked' : ''}>
+                    <span class="task-what">${t.what}</span>
+                    <span class="tag ${t.tag === 'blocked' ? 'off' : ''}">${t.tag}</span>
+                    <span class="task-owner mono">${t.owner}</span>
+                </label>
+            `).join('') : '<p style="margin:0;color:var(--faint);font-size:0.9rem">Nothing in this view.</p>';
+        }
+
+        $('list').addEventListener('change', (e) => {
+            const box = e.target.closest('input[type="checkbox"]');
+            if (!box) return;
+            const t = tasks.find(t => t.id === Number(box.dataset.id));
+            t.done = box.checked;
+            render();
         });
 
-        autoRegisterComponents();
-        loadComponents(document.body, state);
+        $('filters').addEventListener('click', (e) => {
+            const a = e.target.closest('[data-filter]');
+            if (!a) return;
+            state.filter = a.dataset.filter;
+            render();
+        });
 
-        function renderTasks() {
-            const filtered = state.filter === 'all'
-                ? state.tasks
-                : state.tasks.filter(t => t.status === state.filter);
+        $('actions').append(Button({ label: 'Add task', icon: 'plus-lg', variant: 'primary' }));
+        render();
 
-            const container = document.getElementById('tasks-list');
-            container.innerHTML = filtered.map(task => `
-                <div class="task-item ${task.status === 'done' ? 'completed' : ''}">
-                    <input type="checkbox" class="form-check-input me-3" 
-                           ${task.status === 'done' ? 'checked' : ''} 
-                           onchange="toggleTask(${task.id})">
-                    <div class="flex-grow-1">
-                        <div class="task-title">${task.title}</div>
-                        <div class="d-flex gap-2 mt-1">
-                            <span class="badge ${task.status === 'done' ? 'bg-success' : task.status === 'inprogress' ? 'bg-warning' : 'bg-secondary'}">${task.status}</span>
-                            <span class="badge ${task.priority === 'high' ? 'bg-danger' : task.priority === 'medium' ? 'bg-warning' : 'bg-info'}">${task.priority}</span>
-                        </div>
-                    </div>
-                    <button class="btn btn-sm btn-outline-danger" onclick="deleteTask(${task.id})">
-                        <i class="bi bi-trash-fill"></i>
-                    </button>
-                </div>
-            `).join('');
-
-            updateStats();
-        }
-
-        function addTask() {
-            if (!state.newTask.trim()) return;
-
-            state.tasks.push({
-                id: Date.now(),
-                title: state.newTask,
-                status: 'todo',
-                priority: 'medium'
-            });
-            state.newTask = '';
-            renderTasks();
-        }
-
-        function toggleTask(id) {
-            const task = state.tasks.find(t => t.id === id);
-            task.status = task.status === 'done' ? 'todo' : 'done';
-            renderTasks();
-        }
-
-        function deleteTask(id) {
-            state.tasks = state.tasks.filter(t => t.id !== id);
-            renderTasks();
-        }
-
-        function filterTasks(filter) {
-            state.filter = filter;
-            renderTasks();
-        }
-
-        function updateStats() {
-            state.stats.total = state.tasks.length;
-            state.stats.inProgress = state.tasks.filter(t => t.status === 'inprogress').length;
-            state.stats.completed = state.tasks.filter(t => t.status === 'done').length;
-        }
-
-        renderTasks();
+        const build = (document.documentElement.dataset.rnxVersion || '').trim();
+        if (build) $('footVersion').textContent = 'rnxJS ' + build;
     </script>
 </body>
 

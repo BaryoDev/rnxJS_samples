@@ -4,299 +4,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form Validation - rnxJS Demo</title>
+    <title>Form validation - rnxJS</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="styles.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700&family=JetBrains+Mono:wght@400;500&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="demo.css">
 </head>
 
 <body>
-    <Container class="py-4">
-        <!-- Header -->
-        <div class="glass p-3 mb-4 d-flex justify-content-between align-items-center">
-            <h1 class="h4 mb-0 fw-bold">
-                <i class="bi bi-ui-checks text-primary"></i> Form Validation Demo
-            </h1>
-            <Button variant="outlined" onclick="window.location.href='index.html'">
-                <i class="bi bi-house-fill"></i> Home
-            </Button>
+
+    <div class="topbar">
+        <div class="shell topbar-in mono">
+            <a class="wordmark" href="./" style="color:inherit;text-decoration:none">rnxJS</a>
+            <span class="sep">/</span>
+            <span>forms</span>
+            <span class="spacer"></span>
+            <a class="chan" href="./"><i class="bi bi-arrow-left"></i>&nbsp;All demos</a>
         </div>
+    </div>
 
-        <!-- Multi-Step Form -->
-        <div class="glass">
-            <div class="card-body">
-                <!-- Progress Steps -->
-                <div class="mb-4">
-                    <div class="d-flex justify-content-between mb-2">
-                        <div class="text-center flex-fill">
-                            <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center"
-                                style="width: 40px; height: 40px;" id="step1-indicator">
-                                <span>1</span>
-                            </div>
-                            <div class="small mt-1">Personal Info</div>
-                        </div>
-                        <div class="text-center flex-fill">
-                            <div class="rounded-circle bg-secondary text-white d-inline-flex align-items-center justify-content-center"
-                                style="width: 40px; height: 40px;" id="step2-indicator">
-                                <span>2</span>
-                            </div>
-                            <div class="small mt-1">Account Details</div>
-                        </div>
-                        <div class="text-center flex-fill">
-                            <div class="rounded-circle bg-secondary text-white d-inline-flex align-items-center justify-content-center"
-                                style="width: 40px; height: 40px;" id="step3-indicator">
-                                <span>3</span>
-                            </div>
-                            <div class="small mt-1">Preferences</div>
-                        </div>
-                    </div>
-                    <div class="progress" style="height: 4px;">
-                        <div class="progress-bar" id="progress-bar" style="width: 33%"></div>
-                    </div>
+    <div class="shell">
+
+        <header class="page-head">
+            <div class="titles">
+                <h1>Onboard a carrier</h1>
+                <p class="sub">
+                    Validation runs against the same reactive state the inputs write to.
+                    Errors appear on blur, not on every keystroke.
+                </p>
+            </div>
+        </header>
+
+        <section class="grid-split">
+            <div class="panel">
+                <div class="panel-head">
+                    <h2>Carrier details</h2>
+                    <p class="hint">All fields required unless marked optional</p>
                 </div>
-
-                <!-- Step 1: Personal Info -->
-                <div id="step1" class="form-step">
-                    <h3 class="h5 fw-bold mb-3">Step 1: Personal Information</h3>
-
-                    <Row class="g-3">
-                        <Column class="col-md-6">
-                            <label class="form-label">First Name *</label>
-                            <Input placeholder="John" data-bind="form.firstName" data-rule="required" />
-                            <div class="text-danger small" data-bind="errors.form.firstName"></div>
-                        </Column>
-                        <Column class="col-md-6">
-                            <label class="form-label">Last Name *</label>
-                            <Input placeholder="Doe" data-bind="form.lastName" data-rule="required" />
-                            <div class="text-danger small" data-bind="errors.form.lastName"></div>
-                        </Column>
-                        <Column class="col-md-6">
-                            <label class="form-label">Email *</label>
-                            <Input type="email" placeholder="john@example.com" data-bind="form.email"
-                                data-rule="required|email" />
-                            <div class="text-danger small" data-bind="errors.form.email"></div>
-                        </Column>
-                        <Column class="col-md-6">
-                            <label class="form-label">Phone</label>
-                            <Input type="tel" placeholder="+1 (555) 123-4567" data-bind="form.phone" />
-                        </Column>
-                        <Column class="col-12">
-                            <label class="form-label">Address</label>
-                            <Textarea rows="3" placeholder="123 Main St, City, State, ZIP"
-                                data-bind="form.address"></Textarea>
-                        </Column>
-                    </Row>
-
-                    <div class="mt-4 d-flex justify-content-end">
-                        <Button variant="primary" onclick="nextStep(2)">
-                            Next <i class="bi bi-arrow-right"></i>
-                        </Button>
-                    </div>
-                </div>
-
-                <!-- Step 2: Account Details -->
-                <div id="step2" class="form-step" style="display: none;">
-                    <h3 class="h5 fw-bold mb-3">Step 2: Account Details</h3>
-
-                    <Row class="g-3">
-                        <Column class="col-md-6">
-                            <label class="form-label">Username *</label>
-                            <Input placeholder="johndoe" data-bind="form.username" data-rule="required|min:3" />
-                            <div class="text-danger small" data-bind="errors.form.username"></div>
-                        </Column>
-                        <Column class="col-md-6">
-                            <label class="form-label">Password *</label>
-                            <Input type="password" placeholder="••••••••" data-bind="form.password"
-                                data-rule="required|min:8" />
-                            <div class="text-danger small" data-bind="errors.form.password"></div>
-                        </Column>
-                        <Column class="col-12">
-                            <label class="form-label">Role</label>
-                            <Select data-bind="form.role">
-                                <option value="">Select a role</option>
-                                <option value="user">User</option>
-                                <option value="admin">Admin</option>
-                                <option value="manager">Manager</option>
-                            </Select>
-                        </Column>
-                        <Column class="col-12">
-                            <label class="form-label">Profile Picture</label>
-                            <input type="file" class="form-control" accept="image/*" />
-                            <small class="text-muted">Max file size: 2MB</small>
-                        </Column>
-                    </Row>
-
-                    <div class="mt-4 d-flex justify-content-between">
-                        <Button variant="outlined" onclick="prevStep(1)">
-                            <i class="bi bi-arrow-left"></i> Previous
-                        </Button>
-                        <Button variant="primary" onclick="nextStep(3)">
-                            Next <i class="bi bi-arrow-right"></i>
-                        </Button>
-                    </div>
-                </div>
-
-                <!-- Step 3: Preferences -->
-                <div id="step3" class="form-step" style="display: none;">
-                    <h3 class="h5 fw-bold mb-3">Step 3: Preferences</h3>
-
-                    <div class="mb-3">
-                        <label class="form-label">Notifications</label>
-                        <div class="form-check">
-                            <Checkbox data-bind="form.emailNotifications" label="Email notifications" />
-                        </div>
-                        <div class="form-check">
-                            <Checkbox data-bind="form.smsNotifications" label="SMS notifications" />
-                        </div>
-                        <div class="form-check">
-                            <Checkbox data-bind="form.pushNotifications" label="Push notifications" />
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Newsletter Frequency</label>
-                        <div class="form-check">
-                            <Radio name="newsletter" value="daily" data-bind="form.newsletter" label="Daily" />
-                        </div>
-                        <div class="form-check">
-                            <Radio name="newsletter" value="weekly" data-bind="form.newsletter" label="Weekly" />
-                        </div>
-                        <div class="form-check">
-                            <Radio name="newsletter" value="monthly" data-bind="form.newsletter" label="Monthly" />
-                        </div>
-                        <div class="form-check">
-                            <Radio name="newsletter" value="never" data-bind="form.newsletter" label="Never" />
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Theme</label>
-                        <Switch data-bind="form.darkMode" label="Dark Mode" />
-                    </div>
-
-                    <div class="mt-4 d-flex justify-content-between">
-                        <Button variant="outlined" onclick="prevStep(2)">
-                            <i class="bi bi-arrow-left"></i> Previous
-                        </Button>
-                        <Button variant="success" onclick="submitForm()">
-                            <i class="bi bi-check-circle-fill"></i> Submit
-                        </Button>
-                    </div>
-                </div>
-
-                <!-- Success Message -->
-                <div id="success-message" style="display: none;" class="text-center py-5">
-                    <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
-                    <h3 class="mt-3">Registration Successful!</h3>
-                    <p class="text-muted">Your account has been created successfully.</p>
-                    <Button variant="primary" onclick="resetForm()">
-                        Create Another Account
-                    </Button>
+                <div class="panel-body">
+                    <div class="form-grid" data-ref="form"></div>
+                    <div class="form-actions" data-ref="actions"></div>
                 </div>
             </div>
-        </div>
 
-        <!-- Form Data Preview -->
-        <div class="glass mt-4">
-            <div class="card-body">
-                <h3 class="h5 fw-bold mb-3">Form Data (Live Preview)</h3>
-                <pre class="code-block" id="form-preview"></pre>
+            <div class="stack">
+                <div class="panel">
+                    <div class="panel-head"><h2>Validation state</h2></div>
+                    <div class="panel-body">
+                        <ul class="feed" data-ref="state"></ul>
+                    </div>
+                </div>
+                <div class="panel">
+                    <div class="panel-head"><h2>What this shows</h2></div>
+                    <div class="panel-body">
+                        <p style="margin:0;font-size:0.9rem;color:var(--muted);line-height:1.6">
+                            Every field is an rnxJS <code>Input</code> or <code>Select</code>
+                            bound to one state object. The panel above reads that same
+                            object, so it cannot drift from what the form holds.
+                        </p>
+                    </div>
+                </div>
             </div>
+        </section>
+
+    </div>
+
+    <footer style="margin-top:2.5rem">
+        <div class="shell" style="display:flex;gap:1.25rem;flex-wrap:wrap;align-items:center;">
+            <span class="mono" data-ref="footVersion">rnxJS</span>
+            <a href="./">All demos</a>
+            <a href="https://github.com/BaryoDev/rnxJS_samples">Source</a>
+            <span style="margin-left:auto" class="mono">MPL-2.0</span>
         </div>
-    </Container>
+    </footer>
 
     <script src="./rnx.global.js"></script>
     <script>
-        const { createReactiveState, autoRegisterComponents, loadComponents } = rnx;
+        const { Input, Select, Textarea, Button, createReactiveState } = rnx;
+        const $ = (ref) => document.querySelector(`[data-ref="${ref}"]`);
 
         const state = createReactiveState({
-            form: {
-                firstName: '',
-                lastName: '',
-                email: '',
-                phone: '',
-                address: '',
-                username: '',
-                password: '',
-                role: '',
-                emailNotifications: true,
-                smsNotifications: false,
-                pushNotifications: true,
-                newsletter: 'weekly',
-                darkMode: false
-            },
-            errors: {}
+            company: '', vat: '', contact: '', email: '', phone: '',
+            country: 'nl', fleet: '', notes: '',
         });
 
-        autoRegisterComponents();
-        loadComponents(document.body, state);
+        const RULES = {
+            company: (v) => !v.trim() ? 'Enter the registered company name'
+                          : v.trim().length < 2 ? 'That looks too short' : '',
+            vat: (v) => !v.trim() ? 'Enter the VAT number'
+                      : !/^[A-Z]{2}[0-9A-Z]{6,12}$/i.test(v.trim()) ? 'Two letters then 6 to 12 characters, like NL812345678' : '',
+            contact: (v) => !v.trim() ? 'Who should we contact' : '',
+            email: (v) => !v.trim() ? 'Enter an email address'
+                        : !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v.trim()) ? 'That is not a valid email address' : '',
+            phone: (v) => v.trim() && !/^[+0-9 ()-]{7,}$/.test(v.trim()) ? 'Digits, spaces and + only' : '',
+            fleet: (v) => !v.trim() ? 'How many vehicles'
+                        : !/^\d+$/.test(v.trim()) ? 'Whole numbers only'
+                        : Number(v) < 1 ? 'Must be at least one' : '',
+        };
 
-        let currentStep = 1;
+        const FIELDS = [
+            ['company', 'Company name', 'Meridian Haulage BV'],
+            ['vat', 'VAT number', 'NL812345678'],
+            ['contact', 'Main contact', 'Full name'],
+            ['email', 'Email', 'name@company.com'],
+            ['phone', 'Phone (optional)', '+31 20 123 4567'],
+            ['fleet', 'Fleet size', 'Number of vehicles'],
+        ];
 
-        function updatePreview() {
-            document.getElementById('form-preview').textContent = JSON.stringify(state.form, null, 2);
+        const touched = {};
+
+        // ---- build ----------------------------------------------------------
+
+        for (const [key, label, placeholder] of FIELDS) {
+            const wrap = document.createElement('div');
+            wrap.className = 'field';
+            wrap.dataset.field = key;
+
+            const l = document.createElement('label');
+            l.textContent = label;
+
+            const control = Input({ placeholder });
+            const err = document.createElement('span');
+            err.className = 'field-error';
+
+            wrap.append(l, control, err);
+            $('form').append(wrap);
+
+            const el = control.querySelector('input') || control;
+            el.addEventListener('input', () => { state[key] = el.value; paint(); });
+            el.addEventListener('blur', () => { touched[key] = true; paint(); });
         }
 
-        function nextStep(step) {
-            document.getElementById(`step${currentStep}`).style.display = 'none';
-            document.getElementById(`step${step}`).style.display = 'block';
+        const country = document.createElement('div');
+        country.className = 'field';
+        const cl = document.createElement('label');
+        cl.textContent = 'Country of registration';
+        country.append(cl, Select({
+            value: 'nl',
+            options: [
+                { value: 'nl', label: 'Netherlands' }, { value: 'de', label: 'Germany' },
+                { value: 'be', label: 'Belgium' }, { value: 'pl', label: 'Poland' },
+            ],
+        }));
+        $('form').append(country);
 
-            document.getElementById(`step${currentStep}-indicator`).classList.remove('bg-primary');
-            document.getElementById(`step${currentStep}-indicator`).classList.add('bg-success');
-            document.getElementById(`step${step}-indicator`).classList.remove('bg-secondary');
-            document.getElementById(`step${step}-indicator`).classList.add('bg-primary');
+        const notes = document.createElement('div');
+        notes.className = 'field wide';
+        const nl = document.createElement('label');
+        nl.textContent = 'Notes (optional)';
+        const ta = Textarea({ rows: 3, placeholder: 'Anything the ops team should know' });
+        notes.append(nl, ta);
+        $('form').append(notes);
 
-            currentStep = step;
-            document.getElementById('progress-bar').style.width = `${(step / 3) * 100}%`;
+        const submit = Button({ label: 'Submit application', icon: 'check-lg', variant: 'primary' });
+        $('actions').append(submit);
+
+        // ---- validate -------------------------------------------------------
+
+        function errors() {
+            const out = {};
+            for (const key of Object.keys(RULES)) {
+                const msg = RULES[key](state[key] || '');
+                if (msg) out[key] = msg;
+            }
+            return out;
         }
 
-        function prevStep(step) {
-            document.getElementById(`step${currentStep}`).style.display = 'none';
-            document.getElementById(`step${step}`).style.display = 'block';
+        function paint() {
+            const errs = errors();
 
-            document.getElementById(`step${currentStep}-indicator`).classList.remove('bg-primary');
-            document.getElementById(`step${currentStep}-indicator`).classList.add('bg-secondary');
-            document.getElementById(`step${step}-indicator`).classList.remove('bg-success');
-            document.getElementById(`step${step}-indicator`).classList.add('bg-primary');
+            for (const [key] of FIELDS) {
+                const wrap = document.querySelector(`[data-field="${key}"]`);
+                const show = touched[key] && errs[key];
+                wrap.classList.toggle('is-invalid', !!show);
+                wrap.classList.toggle('is-valid', touched[key] && !errs[key] && !!(state[key] || '').trim());
+                wrap.querySelector('.field-error').textContent = show ? errs[key] : '';
+            }
 
-            currentStep = step;
-            document.getElementById('progress-bar').style.width = `${(step / 3) * 100}%`;
+            const remaining = Object.keys(errs).length;
+            $('state').innerHTML = FIELDS.map(([key, label]) => {
+                const bad = errs[key];
+                const filled = !!(state[key] || '').trim();
+                const tone = bad ? (touched[key] ? 'bad' : '') : 'ok';
+                return `<li>
+                    <span class="dot ${tone}"></span>
+                    <span class="what">${label}</span>
+                    <span class="when">${bad ? (touched[key] ? 'invalid' : filled ? 'checking' : 'empty') : 'ok'}</span>
+                </li>`;
+            }).join('');
+
+            const btn = submit.querySelector('button') || submit;
+            btn.disabled = remaining > 0;
+            btn.textContent = remaining > 0 ? `${remaining} field${remaining > 1 ? 's' : ''} to go` : 'Submit application';
         }
 
-        function submitForm() {
-            document.getElementById('step3').style.display = 'none';
-            document.getElementById('success-message').style.display = 'block';
-        }
+        paint();
 
-        function resetForm() {
-            Object.keys(state.form).forEach(key => {
-                if (typeof state.form[key] === 'boolean') state.form[key] = false;
-                else state.form[key] = '';
-            });
-            state.form.emailNotifications = true;
-            state.form.pushNotifications = true;
-            state.form.newsletter = 'weekly';
-
-            document.getElementById('success-message').style.display = 'none';
-            document.getElementById('step1').style.display = 'block';
-            currentStep = 1;
-
-            document.getElementById('step1-indicator').classList.add('bg-primary');
-            document.getElementById('step2-indicator').classList.remove('bg-success');
-            document.getElementById('step2-indicator').classList.add('bg-secondary');
-            document.getElementById('step3-indicator').classList.remove('bg-success');
-            document.getElementById('step3-indicator').classList.add('bg-secondary');
-            document.getElementById('progress-bar').style.width = '33%';
-        }
-
-        // Update preview on any form change
-        Object.keys(state.form).forEach(key => {
-            state.subscribe(`form.${key}`, updatePreview);
-        });
-
-        updatePreview();
+        const build = (document.documentElement.dataset.rnxVersion || '').trim();
+        if (build) $('footVersion').textContent = 'rnxJS ' + build;
     </script>
 </body>
 

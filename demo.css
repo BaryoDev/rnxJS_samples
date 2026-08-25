@@ -285,3 +285,189 @@
    The nowrap rules above pushed "Owner" out of view with no way to reach it. */
 .panel-body.flush { overflow-x: auto; }
 .panel-body.flush > * { min-width: max-content; }
+
+/* ---- side nav (links, since a plain <button> gets hijacked) ---- */
+
+.side-nav a {
+  display: block;
+  text-decoration: none;
+  border-radius: 7px;
+  padding: 0.5rem 0.7rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.side-nav a:hover { background: var(--ground); color: var(--ink); }
+.side-nav a[aria-current="true"] { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+
+/* ---- toggle rows ---- */
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+.toggle-row:last-of-type { border-bottom: 0; }
+.toggle-text { display: flex; flex-direction: column; gap: 0.1rem; min-width: 0; }
+.toggle-label { font-size: 0.92rem; font-weight: 500; }
+.toggle-hint { font-size: 0.79rem; color: var(--faint); }
+.toggle-row .form-check { margin: 0; flex: none; }
+
+/* ---- forms ---- */
+
+.field .form-control, .field .form-select, .field textarea, .field select, .field input {
+  border-color: var(--rule);
+  border-radius: 7px;
+  font-size: 0.92rem;
+}
+
+.field .form-control:focus, .field .form-select:focus, .field input:focus, .field select:focus, .field textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+  outline: none;
+}
+
+/* ---- catalogue parts ----
+   A parts catalogue does not need photographs, so there is no image slot
+   and therefore no grey placeholder pretending to be one. */
+
+.part {
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  border-radius: 9px;
+  padding: 0.95rem 1.05rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+  transition: border-color .14s ease;
+}
+
+.part:hover { border-color: var(--accent); }
+
+.part-head { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; }
+.part-sku { font-size: 0.72rem; color: var(--faint); letter-spacing: 0.03em; }
+
+.part h3 {
+  font-family: Archivo, sans-serif;
+  font-size: 0.98rem;
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  line-height: 1.3;
+  margin: 0;
+  flex: 1;
+}
+
+.part-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--rule-soft);
+}
+
+.part-price {
+  font-family: Archivo, sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.part-add {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--accent);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  padding: 0.22rem 0.6rem;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.part-add:hover { border-color: var(--accent); background: var(--accent-soft); }
+.part-add:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.part-add.is-off { color: var(--faint); cursor: default; }
+.part-add.is-off:hover { border-color: var(--rule); background: none; }
+
+/* ---- validation ---- */
+
+.field-error { font-size: 0.78rem; color: var(--danger); min-height: 1rem; }
+.field.is-invalid input, .field.is-invalid select, .field.is-invalid textarea { border-color: var(--danger); }
+.field.is-valid input, .field.is-valid select { border-color: #bcd8c9; }
+.form-actions { margin-top: 1.15rem; padding-top: 1rem; border-top: 1px solid var(--rule-soft); }
+.form-actions .btn:disabled { opacity: 0.55; }
+.feed .dot.ok { background: var(--success); }
+.feed .dot.bad { background: var(--danger); }
+
+/* ---- segmented filter ---- */
+
+.seg { display: flex; gap: 0.2rem; }
+
+.seg a {
+  font-size: 0.79rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  color: var(--muted);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.seg a:hover { background: var(--ground); color: var(--ink); }
+.seg a[aria-current="true"] { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+
+/* ---- tasks ---- */
+
+.task {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--rule-soft);
+  cursor: pointer;
+  margin: 0;
+}
+
+.task:last-child { border-bottom: 0; }
+.task input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--accent); margin: 0; }
+.task-what { font-size: 0.93rem; min-width: 0; }
+.task.is-done .task-what { color: var(--faint); text-decoration: line-through; }
+.task-owner { font-size: 0.74rem; color: var(--faint); white-space: nowrap; }
+
+/* ---- chat ---- */
+
+.chat-panel { height: min(600px, 70vh); }
+.thread { flex: 1 1 auto; overflow-y: auto; padding: 1.15rem; display: flex; flex-direction: column; gap: 0.9rem; }
+
+.msg { display: flex; flex-direction: column; gap: 0.22rem; max-width: 78%; }
+.msg.me { align-self: flex-end; align-items: flex-end; }
+
+.bubble {
+  border: 1px solid var(--rule);
+  background: var(--panel);
+  border-radius: 10px;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.msg.me .bubble { background: var(--accent); border-color: var(--accent); color: #fff; }
+.msg .meta { font-size: 0.7rem; color: var(--faint); }
+
+.composer {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.85rem 1.15rem;
+  border-top: 1px solid var(--rule);
+  align-items: center;
+}
+
+.composer input { border-color: var(--rule); border-radius: 7px; font-size: 0.92rem; }
+.side-nav a .mono { display: block; }
