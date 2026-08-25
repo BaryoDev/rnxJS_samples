@@ -13,7 +13,7 @@ import re
 import sys
 
 ASSET = re.compile(
-    r'(?<=[\"\'])((?:\./)?(?:styles|index)\.css|(?:\./)?rnx\.global\.js)'
+    r'(?<=[\"\'])((?:\./)?(?:styles|index|demo)\.css|(?:\./)?rnx\.global\.js)'
     r'(?:\?v=[^\"\']*)?(?=[\"\'])'
 )
 

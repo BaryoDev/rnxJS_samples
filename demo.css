@@ -1,0 +1,287 @@
+/* Demo pages, sharing the playground's language.
+   index.css supplies the tokens, the top bar and the type. This file adds
+   the patterns the demos need: page heads, panels, and grids.
+
+   Layout is CSS grid rather than <Row>/<Column>, because <Column> discards
+   the class it is given (BaryoDev/rnxjs#50) so every column comes out the
+   same width. The components themselves are still rnxJS. */
+
+:root { --accent: #0f5c6b; --accent-soft: #0f5c6b12; }
+
+/* ---------- page head ---------- */
+
+.page-head {
+  padding: clamp(2rem, 4.5vw, 3.25rem) 0 1.5rem;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.page-head .titles { display: flex; flex-direction: column; gap: 0.4rem; min-width: 0; }
+
+.page-head h1 {
+  font-family: Archivo, ui-sans-serif, system-ui, sans-serif;
+  font-size: clamp(1.7rem, 3.4vw, 2.4rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  margin: 0;
+}
+
+.page-head .sub { margin: 0; color: var(--muted); font-size: 0.97rem; max-width: 58ch; }
+
+.page-actions { display: flex; gap: 0.5rem; align-items: center; flex: none; }
+
+/* ---------- panels ---------- */
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.panel-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.95rem 1.15rem;
+  border-bottom: 1px solid var(--rule-soft);
+  flex-wrap: wrap;
+}
+
+.panel-head h2 {
+  font-family: Archivo, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.008em;
+  margin: 0;
+}
+
+.panel-head .hint { font-size: 0.78rem; color: var(--faint); margin: 0; }
+
+.panel-body { padding: 1.15rem; flex: 1 1 auto; min-width: 0; }
+.panel-body.flush { padding: 0; }
+
+/* ---------- grids ---------- */
+
+.grid-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 0.85rem;
+}
+
+.grid-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+  gap: 0.85rem;
+  align-items: stretch;
+}
+
+.grid-sidebar {
+  display: grid;
+  grid-template-columns: minmax(180px, 0.9fr) minmax(0, 3fr);
+  gap: 0.85rem;
+  align-items: start;
+}
+
+.grid-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 0.85rem;
+}
+
+.stack { display: flex; flex-direction: column; gap: 0.85rem; }
+
+@media (max-width: 820px) {
+  .grid-split, .grid-sidebar { grid-template-columns: 1fr; }
+}
+
+/* ---------- metrics ---------- */
+
+.metric {
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--accent);
+  border-radius: 9px;
+  padding: 0.95rem 1.05rem 1.05rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.metric .k {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.metric .v {
+  font-family: Archivo, sans-serif;
+  font-size: clamp(1.55rem, 2.4vw, 1.95rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+.metric .d { font-size: 0.79rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.metric .d.up { color: var(--success); }
+.metric .d.down { color: var(--danger); }
+
+/* ---------- feed ---------- */
+
+.feed { display: flex; flex-direction: column; }
+
+.feed li {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.15rem 0.75rem;
+  align-items: baseline;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--rule-soft);
+  list-style: none;
+}
+
+.feed li:last-child { border-bottom: 0; }
+.feed .what { font-size: 0.92rem; }
+.feed .when { font-family: "JetBrains Mono", monospace; font-size: 0.72rem; color: var(--faint); white-space: nowrap; }
+.feed .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--rule-strong, #c3ccd4); transform: translateY(-2px); }
+.feed .dot.on { background: var(--accent); }
+.feed ul { margin: 0; padding: 0; }
+
+/* ---------- tables inside panels ---------- */
+
+.panel table { width: 100%; margin: 0; font-size: 0.88rem; }
+
+.panel thead th {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--faint);
+  font-weight: 500;
+  padding: 0.6rem 1.15rem;
+  border-bottom: 1px solid var(--rule);
+  background: #fbfcfd;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.panel tbody td { padding: 0.62rem 1.15rem; border-bottom: 1px solid var(--rule-soft); vertical-align: middle; }
+.panel tbody tr:last-child td { border-bottom: 0; }
+.panel tbody tr:hover { background: #fbfcfd; }
+
+/* ---------- small pieces ---------- */
+
+.tag {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.68rem;
+  padding: 0.1rem 0.4rem;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  color: var(--muted);
+  background: #fafbfc;
+  white-space: nowrap;
+}
+
+.tag.on { color: var(--success); border-color: #bcd8c9; background: #f1f8f4; }
+.tag.off { color: var(--muted); }
+
+.icon-btn {
+  border: 1px solid var(--rule);
+  background: var(--panel);
+  border-radius: 6px;
+  width: 28px; height: 28px;
+  display: inline-grid;
+  place-items: center;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 0;
+}
+
+.icon-btn:hover { border-color: var(--accent); color: var(--accent); }
+.icon-btn.danger:hover { border-color: var(--danger); color: var(--danger); }
+
+.side-nav { display: flex; flex-direction: column; padding: 0.4rem; }
+
+.side-nav button {
+  text-align: left;
+  border: 0;
+  background: none;
+  border-radius: 7px;
+  padding: 0.5rem 0.7rem;
+  font: inherit;
+  font-size: 0.9rem;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.side-nav button:hover { background: var(--ground); color: var(--ink); }
+.side-nav button[aria-current="true"] { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+
+.field { display: flex; flex-direction: column; gap: 0.3rem; min-width: 0; }
+.field > label { font-size: 0.78rem; font-weight: 600; color: var(--muted); }
+.form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.85rem; }
+.form-grid .wide { grid-column: 1 / -1; }
+
+/* ---- rnxJS Button, in this palette ----
+   The demos no longer load styles.css, so the Bootstrap variable overrides
+   have to live here or every Button falls back to Bootstrap blue. */
+
+.btn {
+  border-radius: 7px;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.btn-primary {
+  --bs-btn-bg: var(--accent);
+  --bs-btn-border-color: var(--accent);
+  --bs-btn-hover-bg: #0a4552;
+  --bs-btn-hover-border-color: #0a4552;
+  --bs-btn-active-bg: #0a4552;
+  --bs-btn-active-border-color: #0a4552;
+  --bs-btn-disabled-bg: var(--accent);
+  --bs-btn-disabled-border-color: var(--accent);
+}
+
+.btn-outlined, .btn-outline-primary, .btn-secondary, .btn-outline-secondary {
+  --bs-btn-color: var(--ink);
+  --bs-btn-bg: var(--panel);
+  --bs-btn-border-color: var(--rule);
+  --bs-btn-hover-bg: var(--ground);
+  --bs-btn-hover-border-color: var(--accent);
+  --bs-btn-hover-color: var(--accent);
+  --bs-btn-active-bg: var(--ground);
+  --bs-btn-active-border-color: var(--accent);
+  --bs-btn-active-color: var(--accent);
+}
+
+.btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; box-shadow: none; }
+
+/* ---- table column behaviour ----
+   A reference like SUP-4182 wrapping onto two lines makes a dense table
+   unreadable, so identifiers and short values hold one line and the
+   subject takes the slack. */
+
+.panel table { table-layout: auto; }
+.panel td:first-child, .panel th:first-child { white-space: nowrap; font-family: "JetBrains Mono", monospace; font-size: 0.8rem; }
+.panel td:nth-child(2) { min-width: 15rem; }
+.panel td:nth-child(n+3), .panel th:nth-child(n+3) { white-space: nowrap; }
+.panel .datatable-header { cursor: pointer; }
+
+/* A table wider than its panel must scroll, not lose its last column.
+   The nowrap rules above pushed "Owner" out of view with no way to reach it. */
+.panel-body.flush { overflow-x: auto; }
+.panel-body.flush > * { min-width: max-content; }

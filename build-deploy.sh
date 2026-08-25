@@ -13,7 +13,7 @@ here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 rnxjs="${RNXJS_REPO:-$HOME/repos/rnxjs}"
 dist="$here/dist"
 
-PAGES=(index.html index.css styles.css chat.html dashboard.html datatable.html
+PAGES=(index.html index.css demo.css styles.css chat.html dashboard.html datatable.html
        forms.html settings.html shop.html tasks.html LICENSE README.md)
 DIRS=(django-demo express-demo)
 
