@@ -1,0 +1,331 @@
+/* rnxJS playground
+   Blueprint register: drafting-paper ground, hairline rules, ink type.
+   The accent is whichever backend ecosystem is selected, so the page
+   takes its colour from the reader's own stack. */
+
+:root {
+  --ground: #eef1f4;
+  --panel: #ffffff;
+  --ink: #101418;
+  --muted: #5a6672;
+  --faint: #8b96a1;
+  --rule: #d3dae1;
+  --rule-soft: #e4e9ee;
+
+  /* replaced at runtime by the framework switcher */
+  --accent: #0c4b33;
+  --accent-soft: #0c4b3314;
+
+  --shell: min(1180px, 100% - 3rem);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: "Public Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.shell { width: var(--shell); margin-inline: auto; }
+
+.mono {
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-variant-ligatures: none;
+}
+
+/* ---------- top bar ---------- */
+
+.topbar {
+  border-bottom: 1px solid var(--rule);
+  background: color-mix(in srgb, var(--panel) 70%, transparent);
+  backdrop-filter: blur(8px);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.topbar-in {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: 52px;
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+}
+
+.wordmark { font-weight: 700; letter-spacing: -0.01em; }
+.topbar .sep { color: var(--faint); }
+.topbar .spacer { flex: 1; }
+
+.chan {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: var(--panel);
+  color: var(--muted);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.chan[data-current="true"] { color: var(--ink); border-color: var(--ink); }
+.chan:hover { border-color: var(--accent); color: var(--accent); }
+
+.dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--accent);
+  flex: none;
+}
+
+/* ---------- hero ---------- */
+
+.hero {
+  padding: clamp(3rem, 7vw, 5.5rem) 0 1.75rem;
+  /* faint drafting grid, hero only */
+  background-image:
+    linear-gradient(to right, #00000008 1px, transparent 1px),
+    linear-gradient(to bottom, #00000008 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.eyebrow {
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin: 0 0 1.1rem;
+}
+
+h1.lede {
+  font-family: Archivo, ui-sans-serif, system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(2.3rem, 6.2vw, 4.15rem);
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+  margin: 0;
+  max-width: 17ch;
+  text-wrap: balance;
+}
+
+h1.lede em { font-style: normal; color: var(--accent); }
+
+.sub {
+  margin: 1.15rem 0 0;
+  max-width: 52ch;
+  color: var(--muted);
+  font-size: 1.05rem;
+}
+
+/* ---------- framework switcher ---------- */
+
+.switch-row {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin: 2.25rem 0 0.85rem;
+}
+
+.switch-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+/* the switcher is an rnxJS SegmentedButton; only its skin is ours */
+#fw .btn {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.78rem;
+  border-color: var(--rule);
+  color: var(--muted);
+  background: var(--panel);
+}
+
+#fw .btn.active,
+#fw .btn:active,
+#fw .btn.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+/* ---------- the split: file on the left, running on the right ---------- */
+
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--panel);
+  box-shadow: 0 1px 0 #ffffff inset, 0 12px 32px -24px #0a1a2a55;
+}
+
+.pane { min-width: 0; display: flex; flex-direction: column; }
+.pane + .pane { border-left: 1px solid var(--rule); }
+
+.pane-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.85rem;
+  border-bottom: 1px solid var(--rule-soft);
+  font-size: 0.74rem;
+  color: var(--muted);
+  background: #fbfcfd;
+}
+
+.pane-head .name { color: var(--ink); }
+
+.code {
+  margin: 0;
+  padding: 1.05rem 0.85rem 1.3rem;
+  font-size: 0.815rem;
+  line-height: 1.75;
+  overflow-x: auto;
+  tab-size: 2;
+  flex: 1;
+}
+
+.code .ln {
+  display: inline-block;
+  width: 2ch;
+  margin-right: 1.15rem;
+  color: #b9c3cd;
+  user-select: none;
+  text-align: right;
+}
+
+.code .tag { color: var(--accent); font-weight: 500; }
+.code .attr { color: #6b4fbb; }
+.code .tpl { color: var(--faint); }
+.code .str { color: #1a7f52; }
+
+.stage {
+  padding: 1.05rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  background:
+    radial-gradient(circle at 1px 1px, #dfe5eb 1px, transparent 0) 0 0 / 16px 16px;
+}
+
+.stage-note {
+  font-size: 0.72rem;
+  color: var(--faint);
+}
+
+/* the live table is a real rnxJS DataTable; keep our chrome off it */
+.stage .datatable-wrapper,
+.stage .table-responsive { background: var(--panel); border-radius: 8px; }
+.stage table { margin-bottom: 0; font-size: 0.86rem; }
+
+/* ---------- demos ---------- */
+
+.section {
+  padding: clamp(3rem, 6vw, 4.5rem) 0 1rem;
+}
+
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 1.6rem;
+  flex-wrap: wrap;
+}
+
+h2.section-title {
+  font-family: Archivo, ui-sans-serif, system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.35rem, 2.6vw, 1.8rem);
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.section-note { font-size: 0.82rem; color: var(--muted); margin: 0; }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(268px, 1fr));
+  gap: 0.9rem;
+}
+
+a.demo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.05rem 1.1rem 1.15rem;
+  border: 1px solid var(--rule);
+  border-radius: 9px;
+  background: var(--panel);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color .14s ease, transform .14s ease;
+}
+
+a.demo:hover { border-color: var(--accent); transform: translateY(-2px); }
+a.demo:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+a.demo h3 {
+  font-family: Archivo, ui-sans-serif, system-ui, sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  margin: 0;
+}
+
+a.demo p { margin: 0; font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+
+.parts { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: auto; padding-top: 0.5rem; }
+
+.part {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.68rem;
+  padding: 0.12rem 0.38rem;
+  border: 1px solid var(--rule-soft);
+  border-radius: 4px;
+  color: var(--muted);
+  background: #fafbfc;
+}
+
+/* ---------- footer ---------- */
+
+footer {
+  border-top: 1px solid var(--rule);
+  margin-top: 3rem;
+  padding: 1.6rem 0 3.5rem;
+  font-size: 0.79rem;
+  color: var(--faint);
+  display: flex;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+footer a { color: var(--muted); text-decoration: none; }
+footer a:hover { color: var(--accent); }
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 860px) {
+  :root { --shell: min(1180px, 100% - 2rem); }
+  .split { grid-template-columns: 1fr; }
+  .pane + .pane { border-left: 0; border-top: 1px solid var(--rule); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+  a.demo:hover { transform: none; }
+}
