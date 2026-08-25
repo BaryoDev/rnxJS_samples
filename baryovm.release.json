@@ -1,0 +1,22 @@
+{
+  "localRoot": "~/repos/rnxJS_samples",
+  "remoteRoot": "/var/www/playground.baryo.dev/rnxjs",
+  "sync": [
+    "dist/"
+  ],
+  "exclude": [
+    ".git",
+    "node_modules",
+    "*.log",
+    ".DS_Store",
+    "._*"
+  ],
+  "builds": [],
+  "sudo": true,
+  "noCompose": true,
+  "postDeploy": [
+    "sudo restorecon -R /var/www/playground.baryo.dev/rnxjs || true",
+    "sudo nginx -t",
+    "sudo systemctl reload nginx"
+  ]
+}

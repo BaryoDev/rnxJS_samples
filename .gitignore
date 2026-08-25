@@ -36,3 +36,4 @@ yarn-error.log*
 # vendored at deploy time, never committed
 rnx.global.js
 next/
+dist/

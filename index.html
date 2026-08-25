@@ -24,8 +24,8 @@
             <span class="sep">/</span>
             <span>playground</span>
             <span class="spacer"></span>
-            <a class="chan" href="./" data-current="true"><span class="dot"></span><span data-ref="relLabel">released</span></a>
-            <a class="chan" href="./next/">main</a>
+            <a class="chan" data-ref="chanReleased"><span class="dot"></span><span data-ref="relLabel">released</span></a>
+            <a class="chan" data-ref="chanNext">main</a>
         </div>
     </div>
 
@@ -229,11 +229,22 @@
             </a>
         `).join('');
 
-        // Name the exact build, so "which am I looking at" is never a guess.
-        const version = (rnx.version || document.documentElement.dataset.rnxVersion || '').trim();
-        if (version) {
-            $('relLabel').textContent = version;
-            $('footVersion').textContent = 'rnxJS ' + version;
+        // One file serves both channels; work out which one we are from the path
+        // so "which build am I looking at" is never a guess.
+        const isNext = /\/next\/?$/.test(location.pathname);
+        const root = document.documentElement.dataset;
+        const build = (root.rnxVersion || '').trim();
+
+        $('chanReleased').href = isNext ? '../' : './';
+        $('chanNext').href = isNext ? './' : './next/';
+        $('chanReleased').dataset.current = String(!isNext);
+        $('chanNext').dataset.current = String(isNext);
+        $('relLabel').textContent = isNext ? 'released' : (build || 'released');
+        $('chanNext').textContent = isNext ? (build || 'main') : 'main';
+        $('footVersion').textContent = build ? 'rnxJS ' + build : 'rnxJS';
+        if (isNext) {
+            $('stageNote').textContent =
+                'A real rnxJS DataTable, built from main. Sort it.';
         }
 
         setStack('django');
