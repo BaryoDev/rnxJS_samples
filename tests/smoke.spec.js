@@ -23,7 +23,7 @@ const CHANNELS = [
 // path, and what has to be on screen for the page to have done its job
 const PAGES = [
   ['index.html', 'a.demo', 9],
-  ['dashboard.html', '.stat-card', 1],
+  ['dashboard.html', '.metric', 4],
   ['datatable.html', 'table', 1],
   ['forms.html', 'form, .form-control', 1],
   ['shop.html', '.product-card, .card', 1],
