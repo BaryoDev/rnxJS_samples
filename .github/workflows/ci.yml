@@ -1,0 +1,125 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    # rnxjs main moves independently of this repo, so check daily that the
+    # next channel would still build and pass.
+    - cron: '0 6 * * *'
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check out rnxjs
+        uses: actions/checkout@v4
+        with:
+          repository: BaryoDev/rnxjs
+          path: .rnxjs
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # The next channel exists to show what main does. Publishing a build from
+      # a red main would make it show something nobody has verified, so the
+      # library's own suite is the gate.
+      - name: rnxjs suite must be green
+        working-directory: .rnxjs
+        run: |
+          npm ci
+          npm test
+
+      - name: Build both channels
+        env:
+          RNXJS_REPO: ${{ github.workspace }}/.rnxjs
+        run: ./build-deploy.sh
+
+      - name: Install browser
+        run: npx playwright install chromium --with-deps
+
+      - name: Smoke test both channels
+        run: npx playwright test
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
+      - uses: actions/upload-artifact@v4
+        if: github.ref == 'refs/heads/main'
+        with:
+          name: playground-dist
+          path: dist/
+          retention-days: 7
+
+  # Deploying needs an SSH key for the VM. Add DEPLOY_KEY as a repository secret
+  # to turn this on; until then CI proves the build is good and the release is
+  # run locally with `npm run deploy`.
+  deploy:
+    needs: verify
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Is a deploy key configured?
+        id: gate
+        env:
+          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+        run: |
+          if [ -n "$DEPLOY_KEY" ]; then echo "ready=true" >> "$GITHUB_OUTPUT"
+          else echo "ready=false" >> "$GITHUB_OUTPUT"; fi
+
+      - name: Skip, no deploy key
+        if: steps.gate.outputs.ready != 'true'
+        run: |
+          echo "No DEPLOY_KEY secret, so nothing was deployed." >> "$GITHUB_STEP_SUMMARY"
+          echo "The verified build is attached to this run as playground-dist." >> "$GITHUB_STEP_SUMMARY"
+          echo "Deploy locally with: npm run build && npm run deploy" >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/download-artifact@v4
+        if: steps.gate.outputs.ready == 'true'
+        with:
+          name: playground-dist
+          path: dist
+
+      - name: Release through BaryoVM
+        if: steps.gate.outputs.ready == 'true'
+        env:
+          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+        run: |
+          set -euo pipefail
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "$DEPLOY_KEY" > ~/.ssh/oracle_vm_key
+          chmod 600 ~/.ssh/oracle_vm_key
+          ssh-keyscan -H 140.245.103.105 >> ~/.ssh/known_hosts 2>/dev/null
+
+          go install github.com/BaryoDev/BaryoVM/cmd/baryovm@latest
+          mkdir -p ~/.baryovm
+          cat > ~/.baryovm/fleet.json <<'JSON'
+          {"vms":[{"name":"oracle","host":"140.245.103.105","user":"opc","key":"~/.ssh/oracle_vm_key"}],
+           "stacks":[{"name":"rnxjs-samples","vm":"oracle",
+                      "path":"/var/www/playground.baryo.dev/rnxjs",
+                      "releaseFile":"./baryovm.release.json"}]}
+          JSON
+          "$(go env GOPATH)/bin/baryovm" stack release rnxjs-samples --no-backup
+
+      - name: Confirm both channels answer
+        if: steps.gate.outputs.ready == 'true'
+        run: BASE_URL=https://playground.baryo.dev/rnxjs npx playwright test --grep "names the build"
