@@ -37,7 +37,7 @@ rnxJS_samples/
 
 ## 🎯 Standalone HTML Demos
 
-All standalone demos are **copy-paste ready** and require no build step. Just open them in a browser!
+All standalone demos are **copy-paste ready** and require no build step. They load a pinned rnxJS build (2.3.1) from jsDelivr, so open them in a browser with an internet connection.
 
 ### 1. **Landing Page** (`index.html`)
 - Overview of all demos
@@ -144,7 +144,7 @@ See `express-demo/README.md` for detailed instructions.
 
 ### Option 1: Open Directly in Browser
 
-Simply open any `.html` file in your browser. No server required!
+Open any `.html` file in your browser. No server and no build step. The page loads rnxJS 2.3.1 from jsDelivr, so you need to be online.
 
 ```bash
 # macOS
@@ -215,7 +215,7 @@ Feel free to modify `styles.css` to match your brand!
     </Container>
 
     <!-- rnxJS Library -->
-    <script src="https://cdn.jsdelivr.net/npm/@arnelirobles/rnxjs/dist/rnx.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@arnelirobles/rnxjs@2.3.1/dist/rnx.global.js"></script>
     
     <script>
         const { createReactiveState, autoRegisterComponents, loadComponents } = rnx;

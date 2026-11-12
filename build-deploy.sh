@@ -25,6 +25,9 @@ copy_pages() {  # copy_pages <target dir>
   mkdir -p "$1"
   for f in "${PAGES[@]}"; do [ -e "$here/$f" ] && cp "$here/$f" "$1/"; done
   for d in "${DIRS[@]}"; do [ -d "$here/$d" ] && cp -R "$here/$d" "$1/"; done
+  # The committed pages load a pinned CDN build. The playground serves its own
+  # copy so both channels can be stamped and cache-busted.
+  perl -pi -e 's#https://cdn\.jsdelivr\.net/npm/\@arnelirobles/rnxjs\@[0-9.]+/dist/rnx\.global\.js#./rnx.global.js#' "$1"/*.html
 }
 
 rm -rf "$dist"
