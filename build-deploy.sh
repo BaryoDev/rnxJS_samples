@@ -27,9 +27,12 @@ copy_pages() {  # copy_pages <target dir>
   for d in "${DIRS[@]}"; do [ -d "$here/$d" ] && cp -R "$here/$d" "$1/"; done
   # The demos are copied for their templates and docs. Server code, settings
   # and dependency files must not be served from the web root.
-  find "$1/django-demo" "$1/express-demo" -type f \
-    \( -name '*.py' -o -name 'requirements.txt' -o -name 'app.js' -o -name 'package.json' \) \
-    -delete 2>/dev/null || true
+  for demo in "$1/django-demo" "$1/express-demo"; do
+    [ -d "$demo" ] || continue
+    find "$demo" -type f \
+      \( -name '*.py' -o -name 'requirements.txt' -o -name 'app.js' -o -name 'package.json' \) \
+      -delete
+  done
   # The committed pages load a pinned CDN build. The playground serves its own
   # copy so both channels can be stamped and cache-busted.
   perl -pi -e 's#https://cdn\.jsdelivr\.net/npm/\@arnelirobles/rnxjs\@[0-9A-Za-z.+-]+/dist/rnx\.global\.js#./rnx.global.js#' "$1"/*.html

@@ -121,6 +121,8 @@ jobs:
         env:
           DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
           DEPLOY_KNOWN_HOSTS: ${{ vars.DEPLOY_KNOWN_HOSTS }}
+          # Refuse a host that is not in known_hosts instead of learning its key.
+          BARYOVM_STRICT_HOST_KEYS: "1"
         run: |
           set -euo pipefail
           # The host key comes from a repository variable, never from
@@ -135,9 +137,15 @@ jobs:
           chmod 600 ~/.ssh/oracle_vm_key
           printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > ~/.ssh/known_hosts
           chmod 600 ~/.ssh/known_hosts
+          if ! ssh-keygen -F 140.245.103.105 -f ~/.ssh/known_hosts >/dev/null; then
+            echo "DEPLOY_KNOWN_HOSTS has no key for 140.245.103.105, refusing to deploy." >&2
+            exit 1
+          fi
 
-          mkdir -p ~/.baryovm
-          cat > ~/.baryovm/fleet.json <<'JSON'
+          # setup-baryovm sets BARYOVM_HOME, and baryovm reads the fleet from there.
+          fleet_dir="${BARYOVM_HOME:-$HOME/.baryovm}"
+          mkdir -p "$fleet_dir"
+          cat > "$fleet_dir/fleet.json" <<'JSON'
           {"vms":[{"name":"oracle","host":"140.245.103.105","user":"opc","key":"~/.ssh/oracle_vm_key"}],
            "stacks":[{"name":"rnxjs-samples","vm":"oracle",
                       "path":"/var/www/playground.baryo.dev/rnxjs",
